@@ -1,0 +1,965 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+   @media print{
+    body{
+      visibility: hidden !important; /* hide everything in body when in print mode*/
+    }
+
+    .printContainer {
+      visibility: visible !important; /* Override the rule above to only show the printables*/
+      position: absolute;
+      z-index: 99999;
+      top: 0;
+      bottom: 0;
+      width: 70vh;
+      height: 10%;
+    } 
+  }
+</style>
+<div class="body-wrapper">
+  <div class="container-fluid text-light">
+      <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+           {% if log_id.user_type == 'Staff' %} <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>{% endif %}
+           {% if log_id.user_type == 'Company' %} <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>{% endif %}
+            <li class="breadcrumb-item"><a href=" " class="text-warning-emphasis">Payroll_list</a></li>
+            <li class="breadcrumb-item" aria-current="page">Over view</li>
+          </ol>
+      </nav>
+      <div class="row mt-5">
+          <div class="col-sm-12 col-lg-12 flex-column">
+              <div class="card mb-3 bg-black shadow p-3 mb-5 rounded" style="max-width: 1200px;">
+                <div class="row mt-4">
+                  <div class="col-sm flex-column">
+                    <div class="row">
+                      <div class="row">
+                        <a class="text-white" style="font-size: 1.5rem;">Employees</a>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-3 col-lg-7">
+                          <input type="text" id="search" class="form-control bg-light text-dark " placeholder="Search.." autocomplete="off">
+                        </div>
+                        <div class="col-sm-4 col-lg-5 " style="text-align: right; float: right;" >
+                          <a class="btn text-center  btn-outline-warning btn-sm" id="sortbutton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button" >
+                            <i  class="fas fa-sort "></i>
+                          </a>
+                          <div class="dropdown-menu m-1">
+                            <a class="dropdown-item" href="">All</a>
+                            <a class="dropdown-item" onclick="sortTable()">Employee Name</a>
+                            <a class="dropdown-item" onclick="sortTablebal()">Employee Salary</a>
+                          </div>
+                          <a class="btn text-center btn-outline-warning btn-sm" id="filterbutton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button" >
+                            <i  class="fas fa-filter "></i>
+                          </a>
+                          <div class="dropdown-menu m-1">
+                            <a class="dropdown-item" onclick="applyFilter('All')">All</a>
+                            <a class="dropdown-item" onclick="applyFilter('Active')">Active</a>
+                            <a class="dropdown-item" onclick="applyFilter('Inactive')">Inactive</a>
+                          </div>
+                          <a class="btn btn btn-outline-warning btn-sm " style="text-align: right;" href=""><i class="fa fa-plus "></i></a>
+                        </div>
+                      </div> 
+                      </div>
+                      
+                  
+                    <div class="row">
+                      <div class="table-responsive scrollable-table" >
+                        <table class="table  text-white" id="myTable">
+                          <tbody>
+                            {% for i in pay %}
+                              <tr class="clickable" id="{{i.id}}">
+                                <td class="justify-content-between align-items-center ">
+                                  <b style="font-size: large;">{{i.first_name}} {{i.last_name}}</b><br><br>
+                                  <label>{{i.joindate}} </label>
+                                </td>
+                                <td>
+                                  <label class="text-end d-block">{{i.status}}</label>
+                                  <br>
+                                  <label class="text-end d-block">₹{{i.salary}}</label>
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-8">
+                    <div  id="overviewdiv">
+                      <div class="row ">
+                        <div class="col-md-7" >
+                          <a class="text-white" style="font-size: 1.5rem;;"><h2 class="text-white">{{p.first_name}} {{p.last_name}}</h2></a>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2" >
+                          <a class="btn bg-warning text-light btn-sm" ><i class="fas fa-eye"></i> Overview</a>
+                        </div>
+                        <div class="col-md-10 col-lg-10 col-sm-12" style="text-align: right; ">
+                          <a href=" "  class=" text-dark" >
+                            <button class="btn btn-outline-warning btn-sm"  title="Edit"><i class="fas fa-edit"></i></button>
+                          </a>
+                          <a  class="text-dark"  onclick="exportToPDF()" id="pdflink">
+                            <button class="btn btn-outline-warning btn-sm"  title="Pdf"><i class="fa-solid fa-file-pdf"></i></button>
+                          </a>
+                          <a class=" text-dark"  onclick="printSelectedArea()"  >
+                            <button class="btn btn-outline-warning btn-sm"  title="Print"> <i class="fas fa-print"></i> </button> 
+                          </a>
+                          <a class="btn btn-outline-warning btn-sm" href="" data-toggle="modal" data-target="#commentModal" data-toggle="tooltip" title="comment">
+                            <i class="far fa-comment"></i>
+                          </a>
+                          {% if p.uploaded_file %}
+                          <a class="text-dark" href="{{ p.uploaded_file.url }}" download>
+                            <button class="btn btn-outline-warning btn-sm" title="download"><i class="fas fa-download"></i></button>
+                        </a>
+                          {% else %}
+                          <a class="btn btn-outline-warning btn-sm" href="" data-toggle="modal" title="upload" data-target="#commentModal3" data-toggle="tooltip" title="comment">
+                            <i class="fa-solid fa-upload"></i>
+                          </a>
+                          {% endif %}
+                        
+                          <a href=" " class="  text-dark" >
+                            <button class="btn btn-outline-warning btn-sm"  title="Delete"><i class="fas fa-trash-alt"></i></button>
+                          </a>
+                          <a class="btn btn-outline-warning btn-sm" href="" id="sts">{{p.status}}</a>
+                          <a class="btn btn-outline-warning btn-sm" href="" data-toggle="modal" data-target="#commentModal2" data-toggle="tooltip" title="history">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                          </a>
+                            <a class="btn btn-outline-warning dropdown-toggle btn-sm" href="#" role="button" title="share" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa-solid fa-share-nodes"></i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <a class="dropdown-item" href="#" data-toggle="modal" title="upload" data-target="#commentModal4" data-toggle="tooltip" title="comment">Mail</a>
+                              <a class="dropdown-item" href="#" onclick="shareViaWhatsApp()">whatsapp</a>
+                            </div>
+                        </div>
+                        
+                      </div><br>
+            
+                      <div id="printdiv" style="color:black;" >
+                        <div class="row " id="div-to-pdf" style="background-color: #acaaaafd; margin-left:1px; margin-right: 1rem; ">
+                          <br>
+                          <div class="row">
+                            <div class="col-3 mt-3" >
+                              <label style="font-size: medium;  "><b>Name : {{p.first_name}} {{p.last_name}}</b></label><br>
+                              <label style="font-size: medium; "><b>Position : {{p.designation}}</b></label>
+                            </div>
+                            <div class="col-6 mt-3">
+                              <div class="row text-center">
+                                <h2  >Employee Details</h2>
+                              </div>
+                            </div>
+                            <div class="col-3 mt-3" style="text-align: right;">
+                              <label style="font-size: medium;" ><b>Emp No : {{p.emp_number}}</b></label><br>
+                              <label style="font-size: medium;"><b>Join Date : {{p.joindate | date:'d-m-Y'}}</b></label>
+                            </div>
+                          </div>
+                          <div class="row text-center">
+                            <h2 >
+                              <hr>
+                            </h2>
+                          </div>
+                          <div class="gen-info col-sm " style="padding-left: 3rem;  ">
+                            <div class="row mt-1">
+                              <div class="col-2"></div>
+                              <div class="col-6" style="text-align: center; ">
+                                <a href=" " >
+                                  {% if p.image != '' %}
+                                  <img class="img-fluid" style="border: 2px rgb(199, 119, 0) solid;" src="{{p.image.url}}" alt="profile pic"  name="img" >
+                                  {% else %}
+                                  <img class="img-fluid" alt="profile pic" name="img">
+                                  {% endif %}
+                                  <br><br>
+                                  <p class="text-dark fs-5 b" >{{p.title}} &nbsp;{{p.first_name}} &nbsp;{{p.last_name}}
+                                  </p>
+                                </a>
+                              </div>
+                            </div><br>
+                            <div class="row mt-1">
+                              <div class="col-5"><p for=""> Email : </p></div>
+                              <div class="col-7">
+                                <p class="bold"  style="max-width: 15rem;word-wrap: break-word;">{{p.email}}</p>
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-5"><p  for="">Phone Number:</p></div>
+                              <div class="col-7">
+                                <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.Phone}}</p>
+                              </div>
+                            </div>
+                            {% if p.emergency_phone %}
+                              <div class="row mt-2">
+                                <div class="col-5"><p  for="">Emergency Number :</p></div>
+                                <div class="col-7">
+                                  <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.emergency_phone}}</p>
+                                </div>
+                              </div>
+                            {% endif %}
+                            <div class="row mt-2">
+                              <div class="col-5"><p  for="">Location :</p></div>
+                              <div class="col-7">
+                                <p class="bold" style="max-width: 15rem;word-wrap: break-word;">{{p.location}}</p>
+                              </div>
+                            </div>
+                            <div class="h3 mt-4 text-black">Personal info
+                              <hr style="color: orange;">
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-5"><p  for="">Gender :</p></div>
+                              <div class="col-7">
+                                <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.gender}}</p>
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-5"><p  for="">Age :</p></div>
+                              <div class="col-7">
+                                <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.age}}</p>
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-5"><p  for="">Blood Group :</p></div>
+                              <div class="col-7">
+                                <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.blood}}</p>
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-5"><p  for="">Date of Birth :</p></div>
+                              <div class="col-7">
+                                <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.dob}}</p>
+                              </div>
+                            </div>
+                            <div class="row mt-1">
+                              <div class="col-5"><p  for="">Permanent Address:</p></div>
+                              <div class="col-7">
+                                <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.permanent_address}}</p>
+                              </div>
+                            </div>
+                            <div class="row mt-1">
+                              <div class="col-5"><p  for="">Temporary Address:</p></div>
+                              <div class="col-7">
+                                <p class="bold " style="max-width: 15rem;word-wrap: break-word;">{{p.address}}</p>
+                              </div>
+                            </div>
+                            {% if p.parent %}
+                              <div class="row mt-1">
+                                <div class="col-5"><p for="">Parent Name :</p></div>
+                                <div class="col-7">
+                                  <p class="bold " style="max-width: 12rem;word-wrap: break-word;">{{p.parent}}</p>
+                                </div>
+                              </div>
+                            {% endif %}
+                            {% if p.spouse_name %}
+                              <div class="row">
+                                <div class="col-5"><p  for="">Spouse Name :</p></div>
+                                <div class="col-7">
+                                  <p class="bold " style="max-width: 12rem;word-wrap: break-word;">{{p.spouse_name}}</p>
+                                </div>
+                              </div>
+                            {% endif %}
+                          </div>
+                          <div class="p-info col-sm ">
+                            <div class="card " style="background-color:#383838 ; color:white; padding-left: 1rem; padding-top: 1rem;">
+                              <div class="h3 mt-4 " style="margin-right: 2vh; color:white">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Salary Info
+                                <hr style="color: orange;">
+                              </div>
+                                                        
+                              <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">Employee Salary :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.salary}}</p>
+                                </div>
+                              </div>
+                                                        
+                              <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">Salary Date Range :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.salaryrange}}</p>
+                                </div>
+                              </div>
+                                                    
+                              <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">Salary Type :</p></div>
+                                <div class="col-6">
+                                  {% if p.salary_type == 'Variable' %}
+                                    <p class="bold">Time Based</p>
+                                  {% else %}
+                                    <p class="bold">{{p.salary_type}}</p>
+                                  {% endif %}
+                                </div>
+                              </div>
+              
+                              {% if p.salary_type == 'Variable' %}
+                                <div class="row mt-2">
+                                  <div class="col-1"></div>
+                                  <div class="col-5"><p for="">Amount per Hour :</p></div>
+                                  <div class="col-6">
+                                    <p class="bold">{{p.amountperhr}}</p>
+                                  </div>
+                                </div>
+                                                      
+                                <div class="row mt-2">
+                                  <div class="col-1"></div>
+                                  <div class="col-5"><p for="">Total Work Hours :</p></div>
+                                  <div class="col-6">
+                                    <p class="bold">{{p.workhr}}</p>
+                                  </div>
+                                </div>
+                              {% endif %}
+                                {% if isTDS %}
+                              <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">TDS Applicable :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.isTDS}}</p>
+                                </div>
+                              </div>
+              
+                                <div class="row mt-2">
+                                  <div class="col-1"></div>
+                                  <div class="col-5"><p for="">TDS Amount :</p></div>
+                                  <div class="col-6">
+                                    <p class="bold">{{p.TDS}}</p>
+                                  </div>
+                                </div>
+                              {% endif %}
+                              {% if p.acc_no %} 
+                              <div class="h3 mt-4 text-light " style="margin-right: 2vh;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bank Details
+                                <hr style="color: orange;">
+                              </div>
+                              {% if p.acc_no %}   <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">ACC Number :</p></div>
+                                <div class="col-6">
+                                     <p class="bold">{{p.acc_no}}</p>
+                                </div>
+                              </div>
+                              {% endif %}
+                              {% if p.IFSC %}<div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">IFSC:</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.IFSC}}</p>
+                                </div>
+                              </div>{% endif %}
+
+                              {% if p.bank_name %}<div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">BANK :</p></div>
+                                <div class="col-6">
+                                   <p class="bold">{{p.bank_name}}</p>
+                                </div>
+                              </div>
+                              {% endif %}
+                              {% if p.branch %} <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">Branch :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.branch}}</p>
+                                </div>
+                              </div>
+                              {% endif %}
+                              {% endif %}
+              
+                              <div class="h3 mt-4 text-light " style="margin-right: 2vh;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Statutary Info
+                                <hr style="color: orange;">
+                              </div>
+                                                        
+                              {% if p.Income_tax_no %}  <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">Income Tax Number :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.Income_tax_no}}</p>
+                                </div>
+                              </div> {% endif %}
+                                                    
+                              <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">Aadhar Number :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.Aadhar}}</p>
+                                </div>
+                              </div> 
+                                                    
+                              {% if p.UAN %} <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">Universal Account No :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.UAN}}</p>
+                                </div>
+                              </div> {% endif %}
+                                                        
+                              {% if p.PRAN %} <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">PR Account No :</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.PRAN}}</p>
+                                </div>
+                              </div>
+                              {% endif %}          
+                              {% if p.PFN %}  <div class="row mt-2">
+                                <div class="col-1"></div>
+                                <div class="col-5"><p for="">PF Account No:</p></div>
+                                <div class="col-6">
+                                  <p class="bold">{{p.PFN}}</p>
+                                </div>
+                              </div>
+                              {% endif %}
+                            </div><br>
+                          </div>
+                        </div>       
+                      </div>
+                    </div>
+                    
+                    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true" style="margin-top: 8vh;">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="background-color: #3b3b3b;">
+                          <div class="modal-header">
+                            <h3 class="modal-title text-light" id="exampleModalLabel">Add Comments</h3>
+                            <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true" style="font-size: x-large;">&times;</span>
+                            </button>
+                          </div>
+                          <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-body" style="background-color: #3b3b3b;">
+                              <textarea type="text" class="form-control text-light" name="comments"></textarea>
+                              <div class="container-fluid">
+                                <table class="table  text-white" style="margin:3px; background-color: #000000;">
+                                  <thead>
+                                    <tr>
+                                      <th style="text-align: center; font-size: large;">sl no.</th>
+                                      <th style="text-align: center; font-size: large;">Comments</th>
+                                      <th style="text-align: center; font-size: large;">By</th>
+                                      <th style="text-align: center; font-size: large;">Delete</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for c in comment %}
+                                      <tr class="table-row">
+                                        <td style="text-align: center;">{{forloop.counter }}</td>
+                                        <td style="text-align: center;">{{c.comment}}</td>
+                                        <td style="text-align: center;">{{c.login_details.first_name}} {{c.login_details.last_name}}</td>
+                                        <td style="text-align: center;">
+                                          <a class="text-danger" href="{% url 'delete_comment' c.id p.id%}"><i class="fa fa-trash" style="font-size:20px;"></i></a>
+                                        </td>
+                                      </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-outline-warning">Save</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <!--------------------------------------------------------------------->
+                    <div class="modal fade" id="commentModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true" style="margin-top: 8vh;">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="background-color: #3b3b3b;">
+                          <div class="modal-header">
+                            <h3 class="modal-title text-light" id="exampleModalLabel">HISTORY</h3>
+                            <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true" style="font-size: x-large;">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                          <div class="container " >
+                            <table class="table text-light  " style="margin:3px; background-color: #000000;">
+                              <thead>
+                                <tr>
+                                  <th>
+                                    sl
+                                  </th>
+                                  <th>
+                                    Date
+                                  </th>
+                                  <th>
+                                    Action
+                                  </th>
+                                  <th>
+                                    By
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for i in history %}
+                                <tr class="table-row">
+                                  <td>{{forloop.counter}}</td>
+                                  <td>{{i.Date}}</td>
+                                  <td>{{i.Action}}</td>
+                                  <td>{{i.login_details.first_name}} {{i.login_details.Last_name}}</td>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--------------------------------------------------------------------------------------->
+                  <div class="modal fade" id="commentModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true" style="margin-top: 8vh;">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content" style="background-color: #3b3b3b;">
+                        <div class="modal-header">
+                          <h3 class="modal-title text-light" id="exampleModalLabel">Add FILE</h3>
+                          <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="font-size: x-large;">&times;</span>
+                          </button>
+                        </div>
+                        <form action="" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <input type="file" name="file" required class="form-control">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-warning">Save</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-------------------------------------------------------------------------------------------------------->
+                  <div class="modal fade" id="commentModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true" style="margin-top: 8vh;">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content" style="background-color: #3b3b3b;">
+                        <div class="modal-header">
+                          <h3 class="modal-title text-light" id="exampleModalLabel">Share details</h3>
+                          <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="font-size: x-large;">&times;</span>
+                          </button>
+                        </div>
+                        <form action="" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <input type="email" name="email" required style="color:white;" class="form-control">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-warning">Share</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                          <!---------------------------------------------print div content----------->
+                          <div id="content" style="display:none;">
+                          <div id="printdiv1" style="overflow-y: scroll; height: 70vh;">
+                            <div class="row" id="div-to-pdf" style="background-color: #ffddb0; margin-left:1px; margin-right: 1rem;">
+                              <br>
+                              <div class="row">
+                                <div class="col-3 mt-3" >
+                                  <label style="font-size: medium; color: black;"><b>Name : {{p.first_name}} {{p.last_name}}</b></label><br>
+                                  <label style="font-size: medium; color: black;"><b>Position : {{p.designation}}</b></label>
+                                </div>
+                                <div class="col-6 mt-3">
+                                  <div class="row text-center">
+                                    <h2 style="color: #000000;">Employee Details</h2>
+                                  </div>
+                                </div>
+                                <div class="col-3 mt-3" style="text-align: right;">
+                                  <label style="font-size: medium; color: black;"><b>Emp No : {{p.emp_number}}</b></label><br>
+                                  <label style="font-size: medium; color: black;"><b>Join Date : {{p.joindate | date:'d-m-Y'}}</b></label>
+                                </div>
+                              </div>
+                              <div class="row text-center">
+                                <h2 style="color: #000000;">
+                                  <hr>
+                                </h2>
+                              </div>
+                              <div class="gen-info col-6 " style="padding-left: 3rem; ">
+                                <div class="row mt-1">
+                                  <div class="col-2"></div>
+                                  <div class="col-6" style="text-align: center; ">
+                                    <a href=" " download>
+                                      <img class="img-fluid" src="" alt="" width="119px" name="img">
+                                      <br><br>
+                                      <p style="color: black;">{{p.title}} &nbsp;{{p.first_name}} &nbsp;{{p.last_name}}
+                                        {% if p.alias %}
+                                          <br>
+                                        
+                                        {% endif %}
+                                      </p>
+                                    </a>
+                                    <div class="col-3"></div>
+                                  </div>
+                                </div><br>
+                                <div class="row mt-1">
+                                  <div class="col-5"><p class="text-dark" for=""> Email : </p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.email}}</p>
+                                  </div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Phone Number:</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.Phone}}</p>
+                                  </div>
+                                </div>
+                                {% if p.emergency_phone %}
+                                  <div class="row mt-3">
+                                    <div class="col-5"><p class="text-dark" for="">Emergency Number :</p></div>
+                                    <div class="col-7">
+                                      <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.emergency_phone}}</p>
+                                    </div>
+                                  </div>
+                                {% endif %}
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Location :</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.location}}</p>
+                                  </div>
+                                </div>
+                                <div class="h3 mt-4 text-black">Personal info
+                                  <hr>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Gender :</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.gender}}</p>
+                                  </div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Age :</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.age}}</p>
+                                  </div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Blood Group :</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.blood}}</p>
+                                  </div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Date of Birth :</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.dob}}</p>
+                                  </div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Permanent Address :</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.permanent_address}}</p>
+                                  </div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-5"><p class="text-dark" for="">Temporary Address :</p></div>
+                                  <div class="col-7">
+                                    <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.address}}</p>
+                                  </div>
+                                </div>
+                                {% if p.parent %}
+                                  <div class="row mt-3">
+                                    <div class="col-5"><p class="text-dark" for="">Parent Name :</p></div>
+                                    <div class="col-7">
+                                      <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.parent}}</p>
+                                    </div>
+                                  </div>
+                                {% endif %}
+                                {% if p.spouse_name %}
+                                  <div class="row mt-3 mb-3">
+                                    <div class="col-5"><p class="text-dark" for="">Spouse Name :</p></div>
+                                    <div class="col-7">
+                                      <p class="bold text-dark" style="max-width: 15rem;word-wrap: break-word;">{{p.spouse_name}}</p>
+                                    </div>
+                                  </div>
+                                {% endif %}
+                              </div>
+                              <div class="p-info col-6">
+                                <div class="card" style="background-color: rgb(110, 61, 46); padding-left: 1rem; padding-top: 1rem;">
+                                  <div class="h3 mt-4 text-white" style="margin-right: 2vh;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Salary Info
+                                    <hr>
+                                  </div>
+                                                            
+                                  <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">Employee Salary :</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.salary}}</p>
+                                    </div>
+                                  </div>
+                                                            
+                                  <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">Salary Date Range :</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.salaryrange}}</p>
+                                    </div>
+                                  </div>
+                                                        
+                                  <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">Salary Type :</p></div>
+                                    <div class="col-6">
+                                      {% if p.salary_type == 'Variable' %}
+                                        <p class="bold">Time Based</p>
+                                      {% else %}
+                                        <p class="bold">{{p.salary_type}}</p>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                  
+                                  {% if p.salary_type == 'Variable' %}
+                                    <div class="row mt-2">
+                                      <div class="col-1"></div>
+                                      <div class="col-5"><p for="">Amount per Hour :</p></div>
+                                      <div class="col-6">
+                                        <p class="bold">{{p.amountperhr}}</p>
+                                      </div>
+                                    </div>
+                                                          
+                                    <div class="row mt-2">
+                                      <div class="col-1"></div>
+                                      <div class="col-5"><p for="">Total Work Hours :</p></div>
+                                      <div class="col-6">
+                                        <p class="bold">{{p.workhr}}</p>
+                                      </div>
+                                    </div>
+                                  {% endif %}
+                  
+                                  <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">TDS Applicable :</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.isTDS}}</p>
+                                    </div>
+                                  </div>
+                  
+                                  {% if p.isTDS != 'No' %}
+                                    <div class="row mt-2">
+                                      <div class="col-1"></div>
+                                      <div class="col-5"><p for="">TDS Amount :</p></div>
+                                      <div class="col-6">
+                                        <p class="bold">{{p.TDS}}</p>
+                                      </div>
+                                    </div>
+                                  {% endif %}
+                  
+                                  <div class="h3 mt-4 text-white" style="margin-right: 2vh;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Statutary Info
+                                    <hr>
+                                  </div>
+                                                            
+                              {% if p.Income_tax_no %}    <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">Income Tax Number :</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.Income_tax_no}}</p>
+                                    </div>
+                                  </div>{% endif  %}
+                                                        
+                                  <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">Aadhar Number :</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.Aadhar}}</p>
+                                    </div>
+                                  </div>
+                                                        
+                               {% if p.UAN %}   <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">Universal Account No :</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.UAN}}</p>
+                                    </div>
+                                  </div>
+                                  {% endif  %}
+                                                            
+                                 {% if p.PRAN %} <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">PR Account No :</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.PRAN}}</p>
+                                    </div>
+                                  </div>
+                                  {% endif  %}
+                                                                                
+                                 {% if p.PFN %} <div class="row mt-2">
+                                    <div class="col-1"></div>
+                                    <div class="col-5"><p for="">PF Account No:</p></div>
+                                    <div class="col-6">
+                                      <p class="bold">{{p.PFN}}</p>
+                                    </div>
+                                  </div>
+                                  {% endif %}
+                  
+                                 
+                                </div><br>
+                              </div>
+                            </div>    
+                          </div>   
+            <!----------------------------------------------------------end--------------------------------->    
+            
+           
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+      
+<script>
+  function shareViaWhatsApp() {
+    // Replace 'Hello, this is a shared message!' with your desired message
+    var message = encodeURIComponent(window.location.href);
+
+    // Create the WhatsApp share link
+    var whatsappLink = 'https://wa.me/?text=' + message;
+
+    // Open the link in a new tab/window
+    window.open(whatsappLink, '_blank');
+  }
+</script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script>
+  function exportToPDF(){
+    console.log("myTable1");
+
+// Use the correct selector to get the element by ID
+var element = document.getElementById('div-to-pdf') 
+
+        var opt =
+        {
+            margin: 0.5,
+            filename: 'overviewpage' + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 4 },
+            jsPDF: { unit: 'cm', format: 'letter', orientation: 'portrait', }
+        };
+        html2pdf().set(opt).from(element).save();
+        
+
+  }
+</script>
+
+<script>
+  function printSelectedArea(){
+    var printContents = $("#printdiv").clone(); // Clone the content-div to avoid modifying the original content
+    printContents.find('.hideon-print').remove(); // Remove columns by class name
+
+    var $printerDiv = $('<div class="printContainer" id=printContainer></div>');
+    $printerDiv.html(printContents.html());
+    $('body').append($printerDiv).addClass("printingContent");
+    var h1Element = document.createElement("h1");
+    var head = document.getElementById("printContainer");
+    head.insertBefore(h1Element, head.firstChild);
+    window.print();
+    $printerDiv.remove();
+    $('body').removeClass("printingContent");
+
+    
+  }
+</script>
+
+<script>
+  const rows = document.querySelectorAll('.clickable');
+  rows.forEach(row => {
+      row.addEventListener('click', () => {
+        var currentURL = window.location.href
+        const rowId = row.id;
+        var newURL = currentURL.replace(/\d+$/, rowId);
+        window.location.href = newURL;
+      });
+  });
+</script>
+
+<script>
+  var $rows = $('#myTable tbody tr');
+  $('#search').keyup(function() {
+    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+    $rows.hide().filter(function() {
+      var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+      return ~text.indexOf(val);
+    }).show();
+  });
+</script>
+
+<script>
+  function sortTable() {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("myTable");
+    switching = true;
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 0; i < rows.length - 1; i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("b")[0];
+        y = rows[i + 1].getElementsByTagName("b")[0];
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+      }
+    }
+  }
+
+  function sortTablebal() {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("myTable");
+    switching = true;
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 0; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        x = parseFloat(rows[i].getElementsByTagName("label")[2].textContent.replace('₹', '').trim());
+        y = parseFloat(rows[i + 1].getElementsByTagName("label")[2].textContent.replace('₹', '').trim());
+        if (x > y) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+      }
+    }
+  }
+
+  function applyFilter(currentFilter) {
+    var rows = $("#myTable tbody tr");
+    rows.show();
+    if (currentFilter === "Active" || currentFilter === "Inactive") {
+      rows.filter(":not(:contains('" + currentFilter + "'))").hide();
+    }
+  }
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    {% for msg in messages %}
+    swal({
+    title: "{{msg}}",
+    text: "{{msg.tags}}",
+    icon: "{{msg.tags}}",
+  });
+    {% endfor %}
+   </script>
+{% endblock %}

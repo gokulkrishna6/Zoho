@@ -1,0 +1,176 @@
+{% extends 'adminbase.html' %}
+{% block content %}
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..." crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..." crossorigin="anonymous"></script>
+
+<div class="body-wrapper">
+    <div class="container-fluid">
+
+        <nav aria-label="breadcrumb ">
+            <ol class="breadcrumb pt-3">
+              <li class="breadcrumb-item"><a href="{% url 'admindash' %}" class="text-warning">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_distributors' %}" class="text-warning">distributors</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'distributor_requests' %}" class="text-warning">Requests</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'distributor_request_overview' distributor_details.id %}" class="text-warning">Overview</a></li>
+            </ol>
+        </nav>
+
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card mb-3 bg-black shadow p-3 mb-5 rounded" style="max-width: 1200px;">
+                    <div class="row mt-5">
+                        {% if messages %}
+                                {% for message in messages %}
+                                    <p id="messageLabel" for="" class="badge text-success"> {{message}} </p>
+                                {% endfor %}
+                                <script>
+                                    // Add a script to hide the messages after a few seconds
+                                    setTimeout(function() {
+                                        var messageLabel = document.getElementById('messageLabel');
+                                        if (messageLabel) {
+                                            messageLabel.style.display = 'none';
+                                        }
+                                    }, 3000); // 3000 milliseconds = 3 seconds (adjust the time as needed)
+                                </script>
+                        {% endif %}
+                        <h1 class="text-center text-white">
+                            {{distributor_details.login_details.first_name}} {{distributor_details.login_details.last_name}}
+                            {% if distributor_details.image %}
+                                <img width="120" height="120" class="rounded-circle mt-lg-0 mt-3 ms-2" src="{{ distributor_details.image.url }}" alt="img" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% else %}
+                                <img src="{% static 'registration_login/images/default.png' %}" alt="img" width="120" height="120" class="rounded-circle mt-lg-0 mt-3 ms-2" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% endif %}
+                        </h1>
+                        
+                    </div>
+                    <div class="row mt-3">
+                        <div class="container">
+                            <h4 class="text-white ms-4">Personal Details</h4>
+                            <hr class="text-warning">
+                        </div>
+                    </div>
+                    <div class="row g-0 mt-2 mt-lg-3">
+                        <div class="col-md-6">
+                            <div class="card-body ">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Account</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: <span class="badge bg-warning text-black">Inactive <i class="fa fa-times-circle fa-sm"></i></span> </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Name </p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.login_details.first_name}} {{distributor_details.login_details.last_name}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Email</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.login_details.email}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Username</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.login_details.username}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Contact</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.contact}}</h5>
+                                    </div>
+                                </div>
+                                
+                              
+                                
+                               
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body ">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Distributor Code</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-warning">: {{distributor_details.distributor_code}} </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Payment Terms</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-light">
+                                            {{distributor_details.payment_term.payment_terms_number}} {{distributor_details.payment_term.payment_terms_value}} &nbsp;
+                                           
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Start Date</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-light">: {{distributor_details.start_date}} </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">End Date</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-light">: {{distributor_details.End_date}} </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      
+                    </div>
+                    <hr class="text-warning">
+                 
+                    <div class="container">
+                        <div class="row pb-5">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3">
+                                <a href="{% url 'admin_distributor_accept' distributor_details.id %}" class="btn btn-outline-warning text-light" style="width: 100%;">ACCEPT REQUEST</a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'admin_distributor_reject' distributor_details.id %}" class="btn text-light btn-outline-warning" style="width: 100%;" >REJECT REQUEST</a>
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>        
+
+{% endblock %}

@@ -1,0 +1,698 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<style>
+    .bg-warning {
+        --bs-bg-opacity: .75;
+        background-color: rgba(var(--bs-warning-rgb), var(--bs-bg-opacity)) !important;
+    }
+    
+</style>
+
+<div class="body-wrapper">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'company_profile' %}" class="text-warning-emphasis">Profile</a></li>
+              <li class="breadcrumb-item" aria-current="page">Edit Modules</li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card mb-3 bg-black" style="max-width: 100%;">
+                    <form action="{% url 'company_module_edit' %}" method="post">
+                        {% csrf_token %}
+                        <div class="row mt-4">
+                            <div class="container">
+                                <h3 class="text-white ms-4 text-center">
+                                    Edit Modules
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                        <p id="messageLabel" for="" class="badge text-warning">( {{message}} )</p>
+                                    {% endfor %}
+                                    <script>
+                                        // Add a script to hide the messages after a few seconds
+                                        setTimeout(function() {
+                                            var messageLabel = document.getElementById('messageLabel');
+                                            if (messageLabel) {
+                                                messageLabel.style.display = 'none';
+                                            }
+                                        }, 4000); // 4000 milliseconds = 4 seconds (adjust the time as needed)
+                                    </script>
+                                    {% endif %}
+                                </h3>
+                                <hr class="text-warning mt-4">
+                            </div>
+                        </div>
+    
+                        <!-- ITEMS Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Items</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.items == 1 %}
+                                    <div class="form-check">
+                                        <input class="form-check-input  bg-warning" type="checkbox"  id="items" name="items" value="1" checked>
+                                        <label class="form-check-label text-white">Items</label>
+                                    </div> 
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox"  id="items" name="items" value="1" >
+                                        <label class="form-check-label text-white">Items</label>
+                                    </div>
+                                    {% endif %} 
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.price_list == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox"  id="price_list" name="price_list" value="1" checked>
+                                        <label class="form-check-label text-white" >Price List</label>
+                                    </div>
+                                    {% else %}  
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox"  id="price_list" name="price_list" value="1">
+                                        <label class="form-check-label text-white" >Price List</label>
+                                    </div>
+                                    {% endif %} 
+                                </div>   
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.stock_adjustment == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox"  id="stock_adjustment" name="stock_adjustment" value="1" checked>
+                                        <label class="form-check-label text-white">Stock Adjustment</label>
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox"  id="stock_adjustment" name="stock_adjustment" value="1">
+                                        <label class="form-check-label text-white">Stock Adjustment</label>
+                                    </div>
+                                    {% endif %}       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.godown == 1 %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="godown" name="godown" value="1" checked>
+                                        <label class="form-check-label text-white">Godown</label>
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="godown" name="godown" value="1">
+                                        <label class="form-check-label text-white">Godown</label>
+                                    </div>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                            <!-- Add other ITEMS Module checkboxes here -->
+                    
+                        </div>
+    
+                        <!-- CASH & BANK Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Cash & Bank</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.cash_in_hand == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="cash_in_hand" name="cash_in_hand" value="1" checked>
+                                        <label class="form-check-label text-white">Cash In Hand</label>
+                                    </div> 
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="cash_in_hand" name="cash_in_hand" value="1">
+                                        <label class="form-check-label text-white">Cash In Hand</label>
+                                    </div> 
+                                    {% endif %}  
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.offline_banking == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="offline_banking" name="offline_banking" value="1" checked>
+                                        <label class="form-check-label text-white">Offline Banking</label>            
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="offline_banking" name="offline_banking" value="1">
+                                        <label class="form-check-label text-white">Offline Banking</label>            
+                                    </div>
+                                    {% endif %}   
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.upi  == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="upi" name="upi" value="1" checked>
+                                        <label class="form-check-label text-white">UPI</label>           
+                                    </div> 
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="upi" name="upi" value="1">
+                                        <label class="form-check-label text-white">UPI</label>           
+                                    </div> 
+                                    {% endif %} 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.bank_holders == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="bank_holders" name="bank_holders" value="1" checked>
+                                        <label class="form-check-label text-white">Bank Holders</label>           
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="bank_holders" name="bank_holders" value="1">
+                                        <label class="form-check-label text-white">Bank Holders</label>           
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.cheque == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="cheque" name="cheque" value="1" checked>
+                                        <label class="form-check-label text-white">Cheque</label>            
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="cheque" name="cheque" value="1">
+                                        <label class="form-check-label text-white">Cheque</label>            
+                                    </div>
+                                    {% endif %} 
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.loan_account == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="loan_account" name="loan_account" value="1" checked>
+                                        <label class="form-check-label text-white">Loan Account</label>            
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="loan_account" name="loan_account" value="1">
+                                        <label class="form-check-label text-white">Loan Account</label>            
+                                    </div>
+                                    {% endif %} 
+                                </div>
+                            </div>
+                            
+                        </div>
+    
+                        <!-- SALES MODULE Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Sales</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.customers == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="customers" name="customers" value="1" checked>
+                                        <label class="form-check-label text-white">Customers</label>            
+                                    </div>
+                                    {% else %}  
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="customers" name="customers" value="1">
+                                        <label class="form-check-label text-white">Customers</label>           
+                                    </div>
+                                    {% endif %} 
+                                </div>   
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.invoice == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="invoice" name="invoice" value="1" checked>
+                                        <label class="form-check-label text-white">Invoice</label>                      
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="invoice" name="invoice" value="1">
+                                        <label class="form-check-label text-white">Invoice</label>                      
+                                    </div>
+                                    {% endif %} 
+                                </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.estimate == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="estimate" name="estimate" value="1" checked>
+                                        <label class="form-check-label text-white">Estimate</label>                     
+                                    </div>
+                                    {% else %}  
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="estimate" name="estimate" value="1">
+                                        <label class="form-check-label text-white">Estimate</label>                     
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.sales_order == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="sales_order" name="sales_order" value="1" checked>
+                                        <label class="form-check-label text-white">Sales Order</label>                    
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="sales_order" name="sales_order" value="1">
+                                        <label class="form-check-label text-white">Sales Order</label>                    
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.recurring_invoice == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="recurring_invoice" name="recurring_invoice" value="1" checked>
+                                        <label class="form-check-label text-white">Recurring Invoice</label>                        
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="recurring_invoice" name="recurring_invoice" value="1">
+                                        <label class="form-check-label text-white">Recurring Invoice</label>                        
+                                    </div>
+                                    {% endif %}  
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.retainer_invoice == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="retainer_invoice" name="retainer_invoice" value="1" checked>
+                                        <label class="form-check-label text-white">Retainer Invoice</label>                       
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="retainer_invoice" name="retainer_invoice" value="1">
+                                        <label class="form-check-label text-white">Retainer Invoice</label>                       
+                                    </div>
+                                    {% endif %} 
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.credit_note == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="credit_note" name="credit_note" value="1" checked>
+                                        <label class="form-check-label text-white">Credit Note</label>                    
+                                    </div> 
+                                    {% else %}  
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="credit_note" name="credit_note" value="1">
+                                        <label class="form-check-label text-white">Credit Note</label>                    
+                                    </div> 
+                                    {% endif %} 
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.payment_received == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="payment_received" name="payment_received" value="1" checked>
+                                        <label class="form-check-label text-white">Payment Received</label>                         
+                                    </div> 
+                                    {% else %}   
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="payment_received" name="payment_received" value="1">
+                                        <label class="form-check-label text-white">Payment Received</label>                         
+                                    </div> 
+                                    {% endif %}                          
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.delivery_challan == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="delivery_challan" name="delivery_challan" value="1" checked>
+                                        <label class="form-check-label text-white">Delivery Challan</label>                        
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="delivery_challan" name="delivery_challan" value="1">
+                                        <label class="form-check-label text-white">Delivery Challan</label>                        
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>   
+                        </div>
+    
+                        <!-- PURCHASE MODULE Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Purchase</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.vendors == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="vendors" name="vendors" value="1" checked>
+                                        <label class="form-check-label text-white">Vendors</label>                        
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="vendors" name="vendors" value="1">
+                                        <label class="form-check-label text-white">Vendors</label>                        
+                                    </div>
+                                    {% endif %}     
+                                </div>   
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.bills == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="bills" name="bills" value="1" checked>
+                                        <label class="form-check-label text-white">Bills</label>                             
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="bills" name="bills" value="1">
+                                        <label class="form-check-label text-white">Bills</label>                             
+                                    </div>
+                                    {% endif %} 
+                                </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.recurring_bills == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="recurring_bills" name="recurring_bills" value="1" checked>
+                                        <label class="form-check-label text-white">Recurring Bills</label>                               
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="recurring_bills" name="recurring_bills" value="1">
+                                        <label class="form-check-label text-white">Recurring Bills</label>                               
+                                    </div>
+                                    {% endif %}                         
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.vendor_credit == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="vendor_credit" name="vendor_credit" value="1" checked>
+                                        <label class="form-check-label text-white">Vendor Credit</label>                                
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="vendor_credit" name="vendor_credit" value="1">
+                                        <label class="form-check-label text-white">Vendor Credit</label>                                
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.purchase_order == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="purchase_order" name="purchase_order" value="1" checked>
+                                        <label class="form-check-label text-white">Purchase Order</label>                                   
+                                    </div> 
+                                    {% else %}  
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="purchase_order" name="purchase_order" value="1">
+                                        <label class="form-check-label text-white">Purchase Order</label>                                   
+                                    </div> 
+                                    {% endif %}  
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.expenses == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="expenses" name="expenses" value="1" checked>
+                                        <label class="form-check-label text-white">Expenses</label>                                  
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="expenses" name="expenses" value="1">
+                                        <label class="form-check-label text-white">Expenses</label>                                  
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.recurring_expenses == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="recurring_expenses" name="recurring_expenses" value="1" checked>
+                                        <label class="form-check-label text-white">Recurring Expenses</label>                                
+                                    </div> 
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="recurring_expenses" name="recurring_expenses" value="1">
+                                        <label class="form-check-label text-white">Recurring Expenses</label>                                
+                                    </div> 
+                                    {% endif %} 
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.payment_made == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="payment_made" name="payment_made" value="1" checked>
+                                        <label class="form-check-label text-white">Payment Made</label>                                    
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="payment_made" name="payment_made" value="1">
+                                        <label class="form-check-label text-white">Payment Made</label>                                    
+                                    </div>
+                                    {% endif %}                               
+                                </div>
+                            </div>                       
+                        </div>
+    
+                        <!-- TIME TRACKING Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Time Tracking</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.projects == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="projects" name="projects" value="1" checked>
+                                        <label class="form-check-label text-white">Projects</label>                                 
+                                    </div> 
+                                    {% else %}  
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="projects" name="projects" value="1">
+                                        <label class="form-check-label text-white">Projects</label>                                 
+                                    </div> 
+                                    {% endif %}
+                                </div>   
+                            </div>
+                            <!-- Add other TIME TRACKING Module checkboxes here -->
+                        </div>
+    
+                        <!-- ACCOUNTS Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Accounts</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.chart_of_accounts == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="chart_of_accounts" name="chart_of_accounts" value="1" checked>
+                                        <label class="form-check-label text-white">Chart of Accounts</label>                                              
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="chart_of_accounts" name="chart_of_accounts" value="1">
+                                        <label class="form-check-label text-white">Chart of Accounts</label>                                              
+                                    </div>
+                                    {% endif %} 
+                                </div>   
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.manual_journal == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="manual_journal" name="manual_journal" value="1" checked>
+                                        <label class="form-check-label text-white">Manual Journal</label>                                             
+                                    </div> 
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="manual_journal" name="manual_journal" value="1">
+                                        <label class="form-check-label text-white">Manual Journal</label>                                             
+                                    </div> 
+                                    {% endif %} 
+                                </div>   
+                            </div>
+                            <!-- Add other ACCOUNTS Module checkboxes here -->
+                        </div>
+    
+                        <!-- E WAY BILL Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">E-Way Bill</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.eway_bill == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="ewaybill" name="ewaybill" value="1" checked>
+                                        <label class="form-check-label text-white">Eway Bill</label>                                 
+                                    </div> 
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="ewaybill" name="ewaybill" value="1">
+                                        <label class="form-check-label text-white">Eway Bill</label>                                 
+                                    </div> 
+                                    {% endif %}  
+                                </div>   
+                            </div>
+                            <!-- Add other eway bill Module checkboxes here -->
+                        </div>
+    
+                        <!-- PAYROLL Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Payroll</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.employees == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="employees" name="employees" value="1" checked>
+                                        <label class="form-check-label text-white">Employees</label>            
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="employees" name="employees" value="1">
+                                        <label class="form-check-label text-white">Employees</label>            
+                                    </div>
+                                    {% endif %}    
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.employees_loan == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="employees_loan" name="employees_loan" value="1" checked>
+                                        <label class="form-check-label text-white">Employees Loan</label>                    
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="employees_loan" name="employees_loan" value="1">
+                                        <label class="form-check-label text-white">Employees Loan</label>                    
+                                    </div>
+                                    {% endif %}   
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.holiday == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="holiday" name="holiday" value="1" checked>
+                                        <label class="form-check-label text-white">Holiday</label>                     
+                                    </div>
+                                    {% else %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="holiday" name="holiday" value="1">
+                                        <label class="form-check-label text-white">Holiday</label>                     
+                                    </div>
+                                    {% endif %}  
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.attendance == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="attendance" name="attendance" value="1" checked>
+                                        <label class="form-check-label text-white">Attendance</label>                       
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="attendance" name="attendance" value="1">
+                                        <label class="form-check-label text-white">Attendance</label>                       
+                                    </div>
+                                    {% endif %} 
+                                   
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.salary_details == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="salary_details" name="salary_details" value="1" checked>
+                                        <label class="form-check-label text-white">Salary Details</label>                       
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="salary_details" name="salary_details" value="1">
+                                        <label class="form-check-label text-white">Salary Details</label>                       
+                                    </div>
+                                    {% endif %} 
+                                </div>
+                            </div>
+                            <!-- Add other PAYROLL Module checkboxes here -->   
+                        </div>
+    
+                        <!-- REPORTS Module -->
+                        <div class="row g-0 mt-5">
+                            <h4 class="text-white ms-4">Reports</h4>
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    {% if allmodules.reports == 1  %}
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="reports" name="reports" value="1" checked>
+                                        <label class="form-check-label text-white">Reports</label>                                 
+                                    </div>
+                                    {% else %} 
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-warning" type="checkbox" id="reports" name="reports" value="1">
+                                        <label class="form-check-label text-white">Reports</label>                                 
+                                    </div>
+                                    {% endif %} 
+                                </div>   
+                            </div>
+                            <!-- Add other eway bill Module checkboxes here -->
+                        </div>
+
+                        <div class="row">
+                            <div class="container">
+                                <hr class="text-warning">
+                                <div class="row mt-5 mb-5">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4">
+                                        <center><button type="submit" class="btn btn-outline-warning w-50">Update</button></center>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                            </div>
+                        </div> 
+
+                    </form>
+                </div>
+            </div>
+        </div>   
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

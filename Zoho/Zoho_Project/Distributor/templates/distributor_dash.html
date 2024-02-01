@@ -1,0 +1,53 @@
+{% extends 'distributorbase.html' %}
+{% load static %}
+{% block content %}
+
+<section >
+
+  <div class="body-wrapper h-100">
+    <div class="container-fluid" >
+ 
+    
+ 
+     <div class="row mt-5">
+       <div class="col-md-4">
+         <div class="card bg-black"  >
+           <div class="card-body">
+ 
+ 
+             
+ 
+             <div class="row">
+               <div class="col-md-9 ">
+                 <a href="{% url 'dist_clients' %}">
+                 <h5 class="card-title mb-9 fw-semibold text-light"><b>CLIENTS</b></h5>
+               </a>
+                 
+ 
+               </div>
+               <div class="col">
+                 <a href="">
+                 <i class="fa fa-users text-warning" style="font-size: 2em;"></i>
+               </a>
+                 
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>      
+       
+       
+     </div>
+     
+</section>
+
+
+
+<script src="http://www.w3.org/2000/svg" src="https://www.gstatic.com/charts/loader.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+
+
+
+{% endblock %}

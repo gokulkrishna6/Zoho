@@ -1,0 +1,124 @@
+{% extends 'registration_login_base.html' %}
+{% load static %}
+
+{% block title %}
+Welcome to Zoho Books
+{% endblock %}
+
+{% block body %}
+
+<div class="row mt-5">
+	<div class="col-md-2 mt-3"></div>
+	<div class="col-md-8 mt-5">
+		<div class="card mb-3 shadow mb-5 rounded-5" style="max-width: 100%;background-color: rgb(30, 30, 30);border: 1px solid rgba(255, 255, 255, 0.25);">
+			<div class="row g-0">
+			  <div class="col-md-6 rounded-5" style="background-color: rgb(218, 164, 48);">
+				<h2 class="text-center text-light mt-5 mb-4 fw-bold">Welcome back to Zoho !</h2>
+				<img src="{% static 'registration_login/images/pngreg.png' %}" class="img-fluid rounded" alt="img">
+			  </div>
+			  <div class="col-md-6 text-white">
+				<div class="card-body">
+					<div class="row mt-3">
+						<h2 class="text-center">
+							LOGIN
+						</h2>
+						{% if messages %}
+							{% for message in messages %}
+								<label id="messageLabel" for="" class="text-center mt-4 mb-3 rounded-3 mx-3" style="background-color: rgb(255, 0, 0,0.5); width: 92%;color:white;">{{message}}</label>
+								<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+							{% endfor %}
+							<script>
+								// Add a script to hide the messages after a few seconds
+								setTimeout(function() {
+									var messageLabel = document.getElementById('messageLabel');
+									if (messageLabel) {
+										messageLabel.style.display = 'none';
+									}
+								}, 5000); // 5000 milliseconds = 5 seconds (adjust the time as needed)
+							</script>
+						{% endif %}
+					</div>
+					<div class="row mt-3">
+						<form action="{% url 'login' %}" method="post" enctype="multipart/form-data">
+							{% csrf_token %}
+
+							<input type="text" id="username" name="username" class="form-control mt-4 mb-3 rounded-3" placeholder="enter username"  required>
+							<input type="password" id="pass" name="password" class="form-control mt-4 mb-3 rounded-3" placeholder="enter password" required>
+							<center>
+								<a style="text-decoration: none;" href="" class="mt-5 text-warning" >Forgot password...?</a>		
+							</center>
+							<center>
+								<div class="row mt-4 mb-3">
+									<a href=""><button type="submit" class="button1 mb-3"><i class="fas fa-user"></i><span class="ms-1">Login</span></button></a>
+								</div>
+							</center>
+							<center>
+								<a style="text-decoration: none;" href="" class="text-warning mt-3" >Not having an account? Register here..</a>		
+							</center>
+
+						</form>
+						<div class="row mt-5 mb-3">
+							<div class="col-lg"><button class="btn-sm btn-outline-warning  text-dark mt-1" style="width: 100%;border-radius: 10px;text-decoration: none;"><a href="{% url 'distributor_register_page' %}" class="text-dark" style="text-decoration: none;"> Distributor</a></button></div>
+							<div class="col-lg"><button class="btn-sm btn-outline-warning  text-darkv mt-1" style="width: 100%;border-radius: 10px;text-decoration: none;"><a href="{% url 'company_register_page1' %}" class="text-dark" style="text-decoration: none;">Company</a></button></div>
+							<div class="col-lg"><button class="btn-sm btn-outline-warning  text-dark mt-1" style="width: 100%;border-radius: 10px;text-decoration: none;"><a href="{% url 'staff_register_page' %}" class="text-dark" style="text-decoration: none;">Staff</a></button></div>
+						</div>
+					</div>
+				  
+				</div>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2 mt-3"></div>
+</div>
+
+
+
+
+
+<style>
+    .button1 {
+      border-radius: 8px;
+      background-color: rgb(218, 164, 48);;
+      border: none;
+      color: #ffffff;
+      text-align: center;
+      font-size: 18px;
+      padding: 6px;
+      width: 150px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    .button1 span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+    
+    .button1 span:after {
+      content: '\00bb';
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+    }
+    
+    .button1:hover span {
+      padding-right: 20px;
+    }
+    
+    .button1:hover span:after {
+      opacity: 1;
+      right: 0;
+    }
+    
+</style>
+
+
+
+
+{% endblock %}

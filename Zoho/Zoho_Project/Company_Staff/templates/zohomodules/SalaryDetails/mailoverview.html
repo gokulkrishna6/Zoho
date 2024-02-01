@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div>
+    <div >
+    <p style="text-align: center;">Employee Detais</p>
+    <p style="text-align: left;"><b>Name : {{p.first_name}} {{p.last_name}}</b><br><b>Position : {{p.designation}}</b></p>
+    <p style="text-align:right;"><b>Emp No : {{p.emp_number}}</b><br>Join Date : {{p.joindate | date:'d-m-Y'}}</p>
+  </div>
+    <hr style="color:rgb(0, 0, 0);">
+    <div  style="float: left; width: 50%; ">
+      <a href=" " >
+        {% if p.image != '' %}
+        <img class="img-fluid rounded-circle" style="border: 2px rgb(199, 119, 0) solid;" src="{{p.image.url}}" alt="profile pic"  name="img" >
+        {% else %}
+        <img class="img-fluid" alt="profile pic" name="img">
+        {% endif %}
+        <br><br>
+        <p class="text-dark fs-5 b" >{{p.title}} &nbsp;{{p.first_name}} &nbsp;{{p.last_name}}
+        </p>
+      </a>
+      <p style="text-align: left;"> Email :{{p.email}} </p>
+      <p style="text-align: left;"> phone:{{p.Phone}} </p>
+      <p style="text-align: left;"> Emergency Number :{{p.emergency_phone}} </p>
+      <p style="text-align: left;"> Location:{{p.location}} </p>
+      <h3 style="text-align: center;">Personal information</h3>
+      <hr style="color:  black;">
+      <p style="text-align: left;"> Gender:{{p.gender}} </p>
+      <p style="text-align: left;"> Age :{{p.age}} </p>
+      <p style="text-align: left;"> Blood Group: {{p.blood}} </p>
+      <p style="text-align: left;"> Dob :{{p.dob}} </p>
+      <p style="text-align: left;"> PermanentAddress :{{p.permanent_address}} </p>
+      <p style="text-align: left;"> Adress :{{p.address}} </p>
+      <p style="text-align: left;"> Father's Name :{{p.spouse_name}} </p>
+      <p style="text-align: left;"> spouse name :{{p.spouse_name}} </p>
+      <h3 style="text-align: center;">Salary Info</h3>
+      <hr style="color:  black;">
+      <p style="text-align: left;"> Employee Salary :{{p.salary}} </p>
+      <p style="text-align: left;"> Salary Date range :{{p.salaryrange}} </p>
+      <p style="text-align: left;"> Salary Type : {% if p.salary_type == 'Variable' %}Time Based {% else %}{{p.salary_type}} {% endif %}</p>
+      {% if p.salary_type == 'Variable' %}
+            <p style="text-align: left;"> Email : </p>
+      <p style="text-align: left;">Amount per Hour :{{p.amountperhr}} </p>
+      <p style="text-align: left;"> Total Work Hours :{{p.workhr}} </p>
+      {% endif %}
+
+    </div>
+    <div style="float: left; width: 50%;">
+      
+      {% if p.isTDS  %}
+      <p style="text-align: left;"> TDS Applicable :{{p.isTDS}} </p>
+      
+      <p style="text-align:left;">TDS Amount :{{p.TDS}}</p>{% endif %}
+      {% if p.acc_no %}
+      <h3 style="text-align: center;">Bank Info</h3>
+      <hr style="color:  black;">
+    {% if p.acc_no %}  <p style="text-align:left;">Account Number:{{p.acc_no}}</p>{% endif %}
+    {% if p.IFSC %}  <p style="text-align: left;">Ifsc{{p.IFSC}}</p>{% endif %}
+      {% if p.bank_name %}<p style="text-align: left;"> Bank:{{p.bank_name}}</p>{% endif %}
+      {% if p.branch %}<p style="text-align: left;">Branch:{{p.branch}}</p>{% endif %}{% endif %}
+      <h3 style="text-align: center;">Statutary Info</h3>
+      <hr style="color:  black;">
+    
+     {% if p.Income_tax_no %} <span style="text-align: left;">Income Tax Number:{{p.Income_tax_no}}</p>{% endif %}
+      <span style="text-align: left;">Aadhar Number:{{p.Aadhar}}</span>
+        <br>
+     {% if p.UAN %} <span style="text-align: left;">Universal Account No:{{p.UAN}}</span>{% endif %}
+
+   
+      {% if p.PRAN %}<span style="text-align: left;">PR Account No:{{p.PRAN}}</span>{% endif %}
+        <br>
+      {% if p.PFN %}<span style="text-align: left;">Pf Account No:{{p.PFN}}</span>{% endif %}
+   
+    </div>
+  </div>
+ 
+</body>
+</html>

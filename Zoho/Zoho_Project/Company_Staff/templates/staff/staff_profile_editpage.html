@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="body-wrapper">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'staff_profile' %}" class="text-warning-emphasis">Profile</a></li>
+              <li class="breadcrumb-item" aria-current="page">Edit Profile</li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card mb-3 bg-black shadow p-3 mb-5 rounded" style="max-width: 1200px;">
+                    <div class="row mt-4">
+                        <h1 class="text-center text-white">
+                            {{details.login_details.first_name}} {{details.login_details.last_name}}
+                            {% if details.image %}
+                                <img width="150" height="150" class="rounded img-fluid mt-lg-0 mt-3 ms-2" src="{{ details.image.url }}" alt="img" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% else %}
+                                <img src="{% static 'registration_login/images/default.png' %}" alt="img" width="120" height="120" class="rounded img-fluid mt-3 ms-2" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% endif %}
+                        </h1>
+                        
+                    </div>
+                    <div class="row mt-3">
+                        <div class="container">
+                            <h3 class="text-white ms-4">
+                                Edit Profile
+                                {% if messages %}
+                                {% for message in messages %}
+                                    <p id="messageLabel" for="" class="badge text-warning">( {{message}} )</p>
+                                {% endfor %}
+                                <script>
+                                    // Add a script to hide the messages after a few seconds
+                                    setTimeout(function() {
+                                        var messageLabel = document.getElementById('messageLabel');
+                                        if (messageLabel) {
+                                            messageLabel.style.display = 'none';
+                                        }
+                                    }, 3000); // 3000 milliseconds = 3 seconds (adjust the time as needed)
+                                </script>
+                                {% endif %}
+
+                            </h3>
+                            <hr class="text-warning">
+                        </div>
+                    </div>
+                    <form action="{% url 'staff_profile_details_edit' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-0 mt-2 mt-lg-3">
+                            <h4 class="text-white ms-4">Basic Details</h4>
+                            <div class="col-md-6">
+                                <div class="card-body ">
+                                   
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <p class="text-white">First Name</p>
+    
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" id="fname" name="fname" class="form-control text-white" value="{{details.login_details.first_name}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <p class="text-white">Last Name</p>
+    
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lname" name="lname" class="form-control text-white" value="{{details.login_details.last_name}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <p class="text-white">Username</p>
+    
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" id="uname" name="uname" class="form-control text-white" value="{{details.login_details.username}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <p class="text-white">Email</p>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" id="eid" name="eid" class="form-control text-white" value="{{details.login_details.email}}" required>                                       
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <p class="text-white">Contact</p>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="text" id="phone" name="phone" class="form-control text-white" value="{{details.contact}}" required>                                      
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <p class="text-white">Profile Picture</p>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="file"  name="profile_pic" accept="image/*" class="form-control text-white" >
+                                        </div>
+                                    </div>
+                                    
+                                                                    
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <center>
+                                            <button type="submit" class="btn btn-outline-warning mt-2" style="width: 185px;">Update</button>
+                                            <a class="btn btn-outline-warning mt-2 ms-1" style="width: 185px;" data-bs-toggle="modal" data-bs-target="#passwordchange">Change Password</a>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        </div>
+    
+                    </form>
+                    
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>        
+
+
+<!-- Modal -->
+<div class="modal fade" id="passwordchange" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" >
+      <div class="modal-content shadow p-3 mb-5 rounded border" style="background-color: rgb(30,30,30);">
+        <div class="modal-body">
+          <form action="{% url 'staff_password_change' %}" method="post">
+            {% csrf_token %}
+            <div class="row mt-3">
+                <h5 class="text-white">Change Password</h5>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-8">
+                    <input type="password" id="pass" name="pass" placeholder="Enter New Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control" title="*password must be at least 8 characters long and include uppercase, lowercase, special characters and numbers." required>                                      
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-8">
+                    <input type="password" id="cpass" name="cpass" class="form-control" placeholder="Confirm New password"  required>                                      
+                </div>
+            </div>
+            <span id='message' class="mt-2"></span><br>
+
+
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-outline-warning" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-outline-warning">Save</button>
+            </div>
+
+          </form>
+        </div>
+        
+      </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $('#pass, #cpass').on('keyup', function () {
+        if ($('#pass').val() == $('#cpass').val()) {
+            $('#message').html('Password is Matching').css('color', 'green');
+        } else
+            $('#message').html('Password is Not Matching').css('color', 'red');
+    });
+</script>
+
+{% endblock %}

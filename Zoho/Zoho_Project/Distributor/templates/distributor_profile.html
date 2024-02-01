@@ -1,0 +1,258 @@
+{% extends 'distributorbase.html' %}
+{% block content %}
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="..." crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="..." crossorigin="anonymous"></script>
+
+<div class="body-wrapper">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'distributor_dashboard' %}" class="text-warning">Dashboard</a></li>
+              <li class="breadcrumb-item">Profile</a></li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card mb-3 bg-black shadow p-3 mb-5 rounded" style="max-width: 1200px;">
+                    <div class="row mt-5">
+                        {% if messages %}
+                                {% for message in messages %}
+                                    <p id="messageLabel" for="" class="badge text-success"> {{message}} </p>
+                                {% endfor %}
+                                <script>
+                                    // Add a script to hide the messages after a few seconds
+                                    setTimeout(function() {
+                                        var messageLabel = document.getElementById('messageLabel');
+                                        if (messageLabel) {
+                                            messageLabel.style.display = 'none';
+                                        }
+                                    }, 3000); // 3000 milliseconds = 3 seconds (adjust the time as needed)
+                                </script>
+                        {% endif %}
+                        <h1 class="text-center text-white">
+                            {{distributor_details.login_details.first_name}} {{distributor_details.login_details.last_name}}
+                            {% if distributor_details.image %}
+                                <img width="120" height="120" class="rounded-circle mt-lg-0 mt-3 ms-2" src="{{ distributor_details.image.url }}" alt="img" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% else %}
+                                <img src="{% static 'registration_login/images/default.png' %}" alt="img" width="120" height="120" class="rounded-circle mt-lg-0 mt-3 ms-2" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% endif %}
+                        </h1>
+                        
+                    </div>
+                    <div class="row mt-3">
+                        <div class="container">
+                            <h4 class="text-white ms-4">Personal Details</h4>
+                            <hr class="text-warning">
+                        </div>
+                    </div>
+                    <div class="row g-0 mt-2 mt-lg-3">
+                        <div class="col-md-6">
+                            <div class="card-body ">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Account</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: <span class="badge bg-warning text-black">Active <i class="fa fa-check-circle fa-sm"></i></span> </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Name </p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.login_details.first_name}} {{distributor_details.login_details.last_name}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Email</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.login_details.email}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Username</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.login_details.username}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Contact</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{distributor_details.contact}}</h5>
+                                    </div>
+                                </div>
+                                
+                              
+                                
+                               
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body ">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Distributor Code</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-warning">: {{distributor_details.distributor_code}} </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Payment Terms</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-light">
+                                            {{distributor_details.payment_term.payment_terms_number}} {{distributor_details.payment_term.payment_terms_value}} &nbsp;
+                                            <button type="button" class="btn btn-sm btn-warning text-dark" data-toggle="modal" data-target="#editPaymentModal">
+                                                Renew <i class="fas fa-sync-alt"></i>
+                                            </button>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Start Date</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-light">: {{distributor_details.start_date}} </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">End Date</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-light">: {{distributor_details.End_date}} </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      
+                    </div>
+                    <hr class="text-warning">
+                 
+                    <div class="container">
+                        <div class="row mb-4">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                
+                               <center> <a href="{% url 'dist_edit_profilePage' distributor_details.id %}" class="btn btn-outline-warning w-75" >Edit Profile</a></center>
+                                    
+                               
+                            </div>
+                            <div class="col-md-4"></div>
+                            
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>        
+
+<!-- Modal for editing payment terms -->
+<div class="modal fade" id="editPaymentModal" tabindex="-1" role="dialog" aria-labelledby="editPaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: rgb(30,30,30);">
+            <!-- Add your modal content here, e.g., form for editing payment terms -->
+            <div class="modal-header">
+                <h5 class="modal-title text-light" id="editPaymentModalLabel">Payment Terms</h5>
+                <button type="button" class="close text-warning bg-black" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&nbsp;&nbsp;&times;&nbsp;&nbsp;</span>
+                </button>
+            </div>
+            <hr style="color: orange;">
+            <div class="modal-body">
+                <p class="text-warning pb-4">If you want to extend your payment terms, you can request here...</p>
+
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <p class="text-white">Existing Term</p>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-light">: {{distributor_details.payment_term.payment_terms_number}} {{distributor_details.payment_term.payment_terms_value}}  </h6>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <p class="text-white">End Date</p>
+
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-light">: {{distributor_details.End_date}} </h6>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <p class="text-white">Select New Payment Terms</p>
+
+                    </div>
+                    <div class="col-md-8">
+                        <select name="select" id="select" class="form-control" required>
+                            <option value="">Choose Payment terms</option>
+
+                            {% for t in terms %}
+                            <option class="bg-black text-light" value="{{t.id}}">{{t.payment_terms_number}}
+                                {{t.payment_terms_value}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-warning" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-outline-warning" onclick="sendRequest()">Send Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendRequest() {
+        // Get the selected payment term value from the dropdown
+        var selectedTermId = $("#select").val();
+        
+        // Construct the URL for your Django view with the selected term ID
+        var url = "{% url 'dist_term_update_request' %}?term_id=" + selectedTermId;
+
+        // Navigate to the Django view URL
+        window.location.href = url;
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Handle form submission
+        $("#sendRequestForm").submit(function (event) {
+            event.preventDefault();  // Prevent default form submission
+            // Optionally, perform any client-side validation here
+            
+            // Submit the form using JavaScript
+            this.submit();
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,112 @@
+
+{% extends 'adminbase.html' %}
+
+{% block content %}
+{% load static %}
+<style>
+       @media (max-width:768px) {
+        .row{
+            margin-left: 10px !important;
+            margin-right: 10px !important;
+        }
+        .h4{
+            font-size: 15px !important;
+            margin-left: 5px !important;
+        }
+       }
+</style>
+    <div class="body-wrapper">
+        <div class="container-fluid">
+
+            <nav aria-label="breadcrumb ">
+                <ol class="breadcrumb pt-3">
+                  <li class="breadcrumb-item"><a href="{% url 'admindash' %}" class="text-warning">Dashboard</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'admin_notification' %}" class="text-warning">Notifications</a></li>
+                </ol>
+            </nav>
+
+            {% for c in companies %}
+            {% if c.days_remaining <= 20 and c.days_remaining > 0 %}
+            <div class="row p-4 m-5" style="background-color: black;">
+                <h6 class="text-light">{{c.company_name}}</h6>
+                <hr class="text-warning">
+                <h6 class="h6 text-light" ><b style="margin-right: 10px;">Payment terms will overdue in <span class="text-warning">{{c.days_remaining}}</span>  days...</h6>
+            </div>
+            {% endif %}
+            {% if c.days_remaining <= 0 %}
+            <div class="row p-4 m-5" style="background-color: black;">
+                <h6 class="text-light">{{c.company_name}}</h6>
+                <hr class="text-warning">
+                <h6 class="h6 text-danger " ><b style="margin-right: 10px;">Payment terms Overdue...</h6>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% for d in distributor %}
+            {% if d.days_remaining <= 20 and d.days_remaining > 0 %}
+            <div class="row p-4 m-5" style="background-color: black;">
+                <h6 class="text-light">{{d.login_details.first_name}} {{d.login_details.last_name}}</h6>
+                <hr class="text-warning">
+                <h6 class="h6 text-light" ><b style="margin-right: 10px;">Payment terms will overdue in <span class="text-warning">{{d.days_remaining}}</span>  days...</h6>
+            </div>
+            {% endif %}
+            {% if d.days_remaining <= 0 %}
+            <div class="row p-4 m-5" style="background-color: black;">
+                <h6 class="text-light">{{d.login_details.first_name}} {{d.login_details.last_name}}</h6>
+                <hr class="text-warning">
+                <h6 class="h6 text-danger " ><b style="margin-right: 10px;">Payment terms Overdue..</h6>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% if data or pterm_updation  %}
+
+                    {% for d in data %}
+                    {% if d.company.reg_action == 'self' %}
+                    <div class="row p-4 m-5" style="background-color: black;">
+                        <h6 class="text-light">Module Updation Request</h6>
+                        <hr  class="text-warning">
+                        <h6 class="h6 text-light" ><b style="margin-right: 10px;">{{ d.company.company_name }}</b>  is requested module change... <a href="{% url 'module_updation_details' d.id %}" style="font-size: 15px; color: rgb(242, 154, 23);">View More</a></h6>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for p in pterm_updation %}
+
+                        {% if p.distributor %}
+                        <div class="row p-4 m-5" style="background-color: black;">
+                            <h6 class="text-light">Payment terms Updation Request from distributor</h6>
+                            <hr  class="text-warning">
+                            <h6 class="h6 text-light" ><b style="margin-right: 10px;">{{ p.distributor.login_details.first_name }} {{ p.distributor.login_details.last_name }}</b>  
+                                is requested to extend payment terms... <a href="{% url 'dist_pterm_updation_details' p.id %}" style="font-size: 15px; color: rgb(242, 154, 23);">View More</a></h6>
+                        </div>
+                        {% endif %}
+
+                        {% if p.company %}
+                            {% if p.company.reg_action == 'self' %}
+                            <div class="row p-4 m-5" style="background-color: black;">
+                                <h6 class="text-light">Payment terms Updation Request from company</h6>
+                                <hr  class="text-warning">
+                                <h6 class="h6 text-light" ><b style="margin-right: 10px;">{{ p.company.company_name }}</b>  is requested to extend payment terms... <a href="{% url 'pterm_updation_details' p.id %}" style="font-size: 15px; color: rgb(242, 154, 23);">View More</a></h6>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+
+                   
+
+
+            {% else %}
+                    <div class="row p-4 m-5" style="background-color: black;">
+                        <h6 class="text-light">No other notifications...</h6>
+                        <hr class="text-warning">
+                    </div>
+            {% endif %}
+        </div>
+    </div>   
+    
+    
+
+{% endblock content %}

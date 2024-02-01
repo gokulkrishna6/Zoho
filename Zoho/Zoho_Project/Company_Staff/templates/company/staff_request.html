@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<style>
+  table tr td:hover {
+  cursor: pointer;
+}
+</style>
+<body>
+  
+  <div class="body-wrapper">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>
+          <li class="breadcrumb-item" aria-current="page">Login Requests</li>
+        </ol>
+      </nav>
+      <div style="overflow-x:auto;"> 
+        <div class="table-responsive">
+          <table class="table mt-lg-5 mt-2 rounded" style="background-color: rgb(0, 0, 0);color: white;">
+            <thead>
+              <tr class="border-bottom border-dark">
+                <th scope="col" ><b>No</b></th>
+                <th scope="col" ><b>Name</b></th>
+                <th scope="col" ><b>Email</b></th>
+                <th scope="col" ><b>Username</b></th>
+                <th scope="col" ><b>Contact</b></th>
+                <th scope="col" ><b>Action</b></th>
+  
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in requests %}
+              <tr class="border-bottom border-dark">
+                <td>{{forloop.counter}}</th>
+                <td>
+                  {% if request.image %}
+                  <img width="40" height="40" class="rounded-circle img-fluid" src="{{ request.image.url }}" alt="img">
+                  {% else %}
+                  <img src="{% static 'registration_login/images/default.png' %}" alt="img" width="40" height="40" class="rounded-circle img-fluid">
+                  {% endif %}
+                  <a class="text-white m-1" href="" >{{request.login_details.first_name}} {{request.login_details.last_name}}</a>
+                </td>
+                <td>{{request.login_details.email}}</td>
+                <td>{{request.login_details.username}}</td>
+                <td>{{request.contact}}</td>
+                
+                <td>
+                  <a href="{% url 'staff_request_accept' request.id %}" class="btn btn-outline-warning btn-sm">Accept</a>
+                  <a href="{% url 'staff_request_reject' request.id %}" class="btn btn-outline-warning btn-sm m-1">Reject</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table> 
+  
+        </div> 
+      </div>
+
+    </div>
+  </div>
+</body>
+
+{% endblock %}

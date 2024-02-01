@@ -1,0 +1,82 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  table tr:hover {
+    background-color: rgb(18, 17, 17);
+    cursor: pointer;
+}
+  @media (max-width:768px) {
+      .h1{
+          font-size: 20px;
+      }
+  }
+</style>
+
+
+<div class="body-wrapper " >
+  <div class="container-fluid">
+      <center>
+          <form action="{% url 'add_payment_terms' %}" method="post" class="m-5 bg-black"
+              style=" padding: 20px; box-shadow: 0 4px 8px 0 black, 0 6px 20px 0 rgba(0, 0, 0, 0.19);width: 70%;">
+              {% csrf_token %}
+              <h2 class=" text-light" >ADD PAYMENT TERMS</h2>
+              {% if messages %}
+              {% for message in messages %}
+              <center>
+                  <label for="" class="text-center alert text-succes" ><b>{{message}}</b></label>
+              </center>
+              {% endfor %}
+              {% endif %}
+              <div class="row d-flex align-items-center" style="display: flex;">
+                  <div class="col"></div>
+                  <div class="col-md-4">
+                      <input type="text" name="num" class="form-control mt-5 text-light" placeholder="Enter Number Of"
+                           required>
+
+                  </div>
+                  <div class="col-md-4">
+                      <select name="select" id="" class="form-control mt-5 "
+                          >
+                          <option class="text-dark" value="Months">Months</option>
+                          <option class="text-dark" value="Years">Years</option>
+                      </select>
+                  </div>
+                  <div class="col"></div>
+
+
+
+              </div>
+              <input type="submit" class="btn btn-outline-warning mt-5"
+                  style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+          </form>
+      </center>
+
+      <h3 class="h3 text-center pt-5 mb-3 text-light" >
+        ALL PAYMENT TERMS</h3>
+
+
+      <table class="table bg-black text-light border-dark"  >
+          <tr>
+              <th><b>ID</b></th>
+              <th><b>Payment Terms</b></th>
+              <th><b>No. Of Days</b></th>
+          </tr>
+          
+          
+          {% for t in terms %}
+          <tr>
+              <td>{{t.id}}</td>
+
+              <td>{{t.payment_terms_number}}  {{t.payment_terms_value}}</td>
+              <td>{{t.days}} days</td>
+          </tr>
+          {% endfor %}
+      </table>
+  </div>
+</div>
+
+
+
+{% endblock %}

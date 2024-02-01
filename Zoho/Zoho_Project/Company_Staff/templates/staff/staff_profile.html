@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="body-wrapper">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>
+              <li class="breadcrumb-item" aria-current="page">Profile</li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card mb-3 bg-black shadow p-3 mb-5 rounded" style="max-width: 1200px;">
+                    <div class="row mt-4">
+                        <h1 class="text-center text-white">
+                            {{details.login_details.first_name}} {{details.login_details.last_name}}
+                            {% if details.image %}
+                                <img width="150" height="150" class="rounded img-fluid mt-lg-0 mt-3 ms-2" src="{{ details.image.url }}" alt="img" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% else %}
+                                <img src="{% static 'registration_login/images/default.png' %}" alt="img" width="150" height="150" class="rounded img-fluid mt-lg-0 mt-3 ms-2" style="border: 2px rgb(199, 119, 0) solid;">
+                            {% endif %}
+                        </h1>
+                        
+                    </div>
+                    <div class="row mt-3">
+                        <div class="container">
+                            <h4 class="text-white ms-4">Personal Details</h4>
+                            <hr class="text-warning">
+                        </div>
+                    </div>
+                    <div class="row g-0 mt-2 mt-lg-3">
+                        <div class="col-md-6">
+                            <div class="card-body ">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Account</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: <span class="badge bg-warning text-black">Active <i class="fa fa-check-circle fa-sm"></i></span> </h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Name </p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.login_details.first_name}} {{details.login_details.last_name}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Email</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.login_details.email}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Username</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.login_details.username}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Contact</p>
+    
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.contact}}</h5>
+                                    </div>
+                                </div>
+                                
+                               
+                            </div>
+                        </div>
+                       
+
+                      
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="container">
+                            <h4 class="text-white ms-4">Company Details</h4>
+                            <hr class="text-warning">
+                        </div>
+                    </div>
+                    
+                    <div class="row g-0 mt-2 mt-lg-3">
+                        <div class="col-md-6">
+                            <div class="card-body ">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Company Name</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.company_name}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Owner</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.login_details.first_name}} {{details.company.login_details.last_name}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Email</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.login_details.email}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Contact</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.contact}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Company Code</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.company_code}}</h5>
+                                    </div>
+                                </div>
+                                
+                             
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card-body ">
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Address </p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.address}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">City</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.city}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">State</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.state}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Country</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.country}}</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <p class="text-white">Pincode</p>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5 class="text-white">: {{details.company.pincode}}</h5>
+                                    </div>
+                                </div>
+                                                            
+                             
+                            </div>
+                            
+                        </div>
+                      
+                    </div>
+                    <div class="container">
+                        <div class="row mb-4">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                
+                               <center> <a href="{% url 'staff_profile_editpage' %}" class="btn btn-outline-warning w-75" >Edit Profile</a></center>
+                                    
+                               
+                            </div>
+                            <div class="col-md-4"></div>
+                            
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>        
+
+
+{% endblock %}

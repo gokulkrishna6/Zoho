@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="body-wrapper">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">Dashboard</li>
+            </ol>
+        </nav>
+
+        <!-- alert section  to remind renew payment terms -->
+        {% if alert_message %}
+        <div class="row mt-4 mb-4">
+            <div class="col-md-12">
+                
+                <h5 id="alertMessage" class="text-danger">
+                    <i class="fa fa-exclamation-circle fa-lg"></i>  Your current payment term validity is about to expire in
+                    {% if days_left != 0 %} 
+                    <span class="fw-bold">{{days_left}} days</span>. 
+                    {% else %}
+                    <span class="fw-bold">Today</span>.
+                    {% endif %}
+
+                </h5>
+                <span class="text-warning-emphasis mt-1">Go to  profile page to renew the payment terms.</span>
+                
+            </div>
+        </div>
+        {% endif %}
+        <!-- alert section  ends -->
+
+    </div>
+</div>
+
+
+
+<script>
+    // Function to make the alert blink
+    function blink() {
+        $('#alertMessage').fadeOut(1000).fadeIn(1000, blink);
+    }
+
+    // Call the blink function when the page loads
+    $(document).ready(function() {
+        blink();
+    });
+</script>
+
+
+{% endblock %}

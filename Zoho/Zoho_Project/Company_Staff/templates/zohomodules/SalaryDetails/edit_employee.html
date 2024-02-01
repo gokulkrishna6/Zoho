@@ -1,0 +1,920 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+<div class="body-wrapper">
+    <div class="container-fluid text-light">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              {% if log_id.user_type == 'Staff' %} <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>{% endif %}
+           {% if log_id.user_type == 'Company' %} <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>{% endif %}
+            <li class="breadcrumb-item"><a href="{% url 'employee_list' %}" class="text-warning-emphasis">Payroll_list</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'employee_overview' p.id %}" class="text-warning-emphasis">Overview</a></li>
+            <li class="breadcrumb-item" aria-current="page">EDIT EMPLOYEE</li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card mb-3 bg-black shadow p-3 mb-5 rounded" style="max-width: 1200px;">
+                  <div class="row mt-4">
+        <section>
+            <div class="container pl-5">
+                <div class=" text-light">
+                    <h2 style="text-align: center;color: white;">EDIT EMPLOYEE</h2>
+                    <hr class="text-warning font-weight-bold">
+                    {% for message in messages %}
+                    <h5>
+                        <div class="alert alert-danger message">
+                            {{ message }}
+                        </div>
+                    </h5>
+                    {% endfor %}
+                </div>
+                <form method="POST" action="{% url 'do_payroll_edit' p.id %}" enctype="multipart/form-data" id="myForm" onsubmit="return validateform()">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="data  col-lg-6 col-md-6 col-sm-16">
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Title</label>
+                                </div>
+                                <div class=" col-6">
+                                    <select class="form-control text-dark bg-light" name="title" id="title" required >
+                                        <option value="" selected hidden>Select</option>
+                                        <option value="Mr" {% if p.title == 'Mr' %}selected{% endif %}>Mr</option>
+                                        <option value="Mrs" {% if p.title == 'Mrs' %}selected{% endif %}>Mrs</option>
+                                        <option value="Miss" {% if p.title == 'Miss' %}selected{% endif %}>Miss</option>
+                                        <option value="Ms" {% if p.title == 'Ms' %}selected{% endif %}>Ms</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">First Name</label>
+                                </div>
+                                <div class="input-container col-6">
+                                    <input type="text" class="form-control text-dark bg-light" name="fname" id="fname" required value="{{p.first_name}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Last Name</label>
+                                </div>
+                                <div class="input-container col-6">
+                                    <input type="text" class="form-control text-dark bg-light" name="lname" id="lname" required value="{{p.last_name}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Alias</label>
+                                </div>
+                                <div class="input-container col-6">
+                                    <input type="text" class="form-control text-dark bg-light" name="alias" id="alias" value="{{p.alias}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Date of joining</label>
+                                </div>
+                                <div class="input-container col-6">
+                                    <input type="date" class="form-control text-dark bg-light" name="joindate" id="joindate" required value="{{p.joindate|date:'Y-m-d'}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="sdate">Salary Date</label>
+                                </div>
+                                <div class="input-container col-6">
+                                    <select class="form-control text-dark bg-light" name="salary" id="sdate" required>
+                                        <option value="" selected hidden>Select</option>
+                                        <option value="1-10" {% if p.salaryrange == '1-10' %}selected{% endif %}>1-10</option>
+                                        <option value="11-15" {% if p.salaryrange == '11-15' %}selected{% endif %}>11-15</option>
+                                        <option value="16-31" {% if p.salaryrange == '16-31' %}selected{% endif %}>16-31</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Define salary details</label>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control text-dark bg-light" name="saltype" id="sal" onchange="salFunction()" required>
+                                        <option value="" selected hidden>Select</option>
+                                        <option value="Fixed"  {% if p.salary_type == 'Fixed' %}selected{% endif %}>Fixed</option>
+                                        <option value="Temporary"  {% if p.salary_type == 'Temporary' %}selected{% endif %}>Temporary</option>
+                                        <option value="Variable"  {% if p.salary_type == 'Variable' %}selected{% endif %}>Time Based</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="fixed" >
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Salary Amount</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control text-dark bg-light" name="fsalary" id="fsalary" value="{{p.salary}}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="variable" style="display: none;">
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Amount per Hour</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control text-dark bg-light" name="amnthr" id="amnthr" {% if p.amountperhr %}  value="{{p.amountperhr}}" {% endif %}>
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Total working Hours</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control text-dark bg-light" name="hours" id="hours" onkeyup="calculateAmount()" {% if p.workhr %} value="{{p.workhr}}"{% endif %}>
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Salary Amount</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control text-dark bg-light" name="vsalary" id="vsalary" readonly {% if p.salary_type == 'Variable' %} value="{{p.salary}}" {% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="image col-6 col-lg-6 col-md-6 col-sm-6">
+                            <div class="row">
+                                <div class="col-5 col-lg-5 col-md-10 col-sm-6 text-center">
+                                    <label for="">Upload Image</label>
+                                </div>
+                                {% if p.image %}
+                                <div class="col-6 col-lg-7 col-md-10 col-sm-7">
+                                    <br><br><br><br>
+                                    <label for="image-input">
+                                        <img class="img-fluid w-30 h-50" src="{{p.image.url}}" alt="profile pic"  id="img"
+                                            style="background-color: rgba(156, 156, 156, 0.267); border-radius: 30px;">
+                                    </label>
+                                    <input id="image-input" type="file" name="file" class="form-control" accept="image/*" onchange="loadFile(event)" style="display: none;">
+                                </div>
+                                {% else %}
+                                <div class="col-6 col-lg-7 col-md-10 col-sm-12">
+                                    <br><br><br><br>
+                                    <label for="image-input">
+                                        <img class="img-fluid" src="" alt="profile pic" width="190px" height="200px" id="img"
+                                            style="background-color: rgba(156, 156, 156, 0.267); border-radius: 30px;">
+                                    </label>
+                                    <input id="image-input" type="file" name="file" class="form-control" accept="image/*" onchange="loadFile(event)" style="display: none;">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="gen-info row pt-5">
+                       
+                            <h4 class="text-center py-2 text-light">General information</h4>
+                            <hr class="text-warning font-weight-bold">
+                            <div class="left col-lg-6 col-sm-6">
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Employee Number</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control text-dark bg-light" name="empnum" id="empnum" onkeyup="empValidation(document.getElementById('empnum'))" required value="{{p.emp_number}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Designation</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control text-dark bg-light" name="designation" required value="{{p.designation}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Location</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control text-dark bg-light" name="location" required value="{{p.location}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Gender</label>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control text-dark bg-light" name="gender" id="dropId3" required>
+                                        <option value="" selected hidden>Select</option>
+                                        <option value="Male"{% if p.gender == 'Male' %}selected{% endif %}>Male</option>
+                                        <option value="Female" {% if p.gender == 'Female' %}selected{% endif %}>Female</option>
+                                        <option value="Transgender" {% if p.gender == 'Transgender' %}selected{% endif %}>Transgender</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Date of Birth</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="date" class="form-control text-dark bg-light"  id="dob" name="dob" onchange="calculateAge()" required value="{{p.dob|date:'Y-m-d'}}">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Age</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="" value="{{p.age}}" class="form-control text-dark bg-light"  id="age" name="age" readonly>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Blood Group</label>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control text-dark bg-light" id="blood" name="blood" required>
+                                        <option value="A+">A+</option>
+                                        <option value="B+">B+</option>
+                                        {% for i in blood %}
+                                        <option value="{{i.Blood_group}}" {% if p.blood == i.Blood_group %}selected{% endif %}>{{i.Blood_group}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <!-- <a class="btn-outline-warning" href="" data-toggle="modal" data-target="#commentModal" data-toggle="tooltip" title="comment">
+                                        Add Blood group
+                                       </a> -->
+                                </div>
+                                
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Father's Name/Mother's Name</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" value="{{p.parent}}" class="form-control text-dark bg-light" name="fm_name">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Spouse's Name</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" value="{{p.spouse_name}}" class="form-control text-dark bg-light" name="s_name">
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Contact Number</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control text-dark bg-light" name="phone" id="phone" required value="{{p.Phone}}"
+                                        onkeyup="phoneValidate(document.getElementById('phone'),document.getElementById('pherror'))">
+                                    <div id="pherror" class="text-danger"></div>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Emergency Contact Number</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control text-dark bg-light" name="ephone" id="ephone" value="{{p.emergency_phone}}"
+                                        onkeyup="phoneValidate(document.getElementById('ephone'),document.getElementById('epherror'))">
+                                    <div id="epherror" class="text-danger"></div>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Email</label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="email" value="{{p.email}}" class="form-control text-dark bg-light" name="email" id="email"
+                                        required onkeyup="emailvalidate()">
+                                    <div id="error" class="text-danger"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-lg-5 col-sm-5">
+
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Permanent Address</label>
+                                </div>
+                                <div class="col-6">
+                                    <textarea class="form-control text-dark bg-light mb-2 pt-0" name="paddress" id="padrs1" onkeyup="clearaddreass(this.id)" required value="">{{p.permanent_address}}</textarea>
+                                    <textarea class="form-control text-dark bg-light pt-0" name="paddress2" id="padrs2" onkeyup="clearaddreass(this.id)"></textarea>
+                                </div>
+                            </div>
+                            <div class="row pb-4">
+                                <div class="col-6">
+                                    <label for="">Temporary Address</label>
+                                </div>
+                                <div class="col-6">
+                                    <input class="mx-2" type="checkbox" id="filladdress" name="filladdress">
+                                    <label style="font-size: .8rem;">Same as permanent address</label>
+                                    <textarea class="form-control text-dark bg-light mb-2 pt-0" name="address" id="adrs1" onkeyup="clearaddreass(this.id)">{{p.address}}</textarea>
+                                    <textarea class="form-control text-dark bg-light pt-0" name="address2" id="adrs2" onkeyup="clearaddreass(this.id)"></textarea>
+                                </div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Attachments</label>
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control" id="file-upload" type="file" name="attach" style="background: transparent;">
+                                </div>
+                            </div>
+                            <div class="row pb-4">
+                                <div class="col-6">
+                                    <label for="">Provide Bank Details</label>
+                                </div>
+                                <div class="col-6"><select class="form-control text-dark bg-light" name="bank" id="dropId"
+                                        onchange="bankdisplay()" required>
+                                        <option value="" selected hidden>Select</option>
+                                        <option value="1"{% if p.acc_no != '' %}selected{% endif %}>Yes</option>
+                                        <option value="0" {% if p.acc_no == '' %}selected{% endif %}>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="bank" id="bank" style="display: none;">
+                                <br>
+                                <br>
+                                <h4 class="text-center py-2 text-light">Bank information</h4>
+                                <hr class="text-warning font-weight-bold">
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Account Number</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" value="{{p.acc_no}}" class="form-control text-dark bg-light" name="acc_no" id="acc_no" pattern="[0-9]{14}">
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">IFSC</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" value="{{p.IFSC}}" class="form-control text-dark bg-light" name="ifsc" id="ifsc">
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Name of Bank</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" value="{{p.bank_name}}" class="form-control text-dark bg-light" name="b_name" id="b_name">
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Branch Name</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" value="{{p.branch}}" class="form-control text-dark bg-light" name="branch" id="branch">
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Transaction Type</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-control text-dark bg-light" name="ttype" id="ttype">
+                                            <option value="" selected hidden>Select</option>
+                                            <option value="ATM"{% if p.transaction_type == 'ATM' %}selected{% endif %}>ATM</option>
+                                            <option value="Cash"{% if p.transaction_type == 'Cash' %}selected{% endif %}>Cash</option>
+                                            <option value="Check"{% if p.transaction_type == 'Check' %}selected{% endif %}>Check</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">TDS Applicable</label>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control text-dark bg-light" name="tds" id="tds" onchange="tdsFunction()"
+                                        required>
+                                        <option value="1"{% if p.isTDS == 'Yes'  %}selected{% endif %}>Yes</option>
+                                        <option value="0" {% if p.isTDS == 'No'  %}selected{% endif %}>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="tds-div" style="display: none;">
+                                <br>
+                                <br>
+                                <h5 class="text-center py-1 text-light">For Banking</h5>
+                                <hr class="text-warning font-weight-bold">
+                                
+                                <div class="row pb-3">
+                                    <div class="col-6">
+                                        <label for="">Percentage/Amount</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-control text-dark bg-light" name="pora" id="pora" onchange="tdsFunction2()">
+                                            <option value="" selected hidden>Select</option>
+                                            <option value="Percentage"{% if p.isTDS == 'Percentage' %}selected{% endif %}>Percentage</option>
+                                            <option value="Amount"{% if p.isTDS == 'Amount' %}selected{% endif %}>Amount</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="p" style="display: none;">
+                                    <div class="row pb-3">
+                                        <div class="col-6">
+                                            <label for="">Percentage</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="number" class="form-control text-dark bg-light" name="pcnt" id="pcnt" value="{{p.TDS_percentage}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="a" style="display: none;">
+                                    <div class="row pb-3">
+                                        <div class="col-6">
+                                            <label for="">Amount</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="number" class="form-control text-dark bg-light" name="amnt" id="amnt" value="{{p.TDS_percentage}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                            
+                        </div>
+            
+                        <br>
+                        <br>
+                        <div class="row">
+                            <h4 class="text-center py-2 text-light">Statutary information</h4>
+                            <hr class="text-warning font-weight-bold">
+                            <div class=" col-sm-9 col-lg-6">
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Income Tax Number(pan)</label>
+                                </div>
+                                <div class="col-6"><input type="text" value="{{p.Income_tax_no}}" class="form-control text-dark bg-light" name="itn" pattern="^[A-Z]{5}[0-9]{4}[A-Z]$"></div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Aadhar Number(*)</label>
+                                </div>
+                                <div class="col-6"><input type="text" value="{{p.Aadhar}}" class="form-control text-dark bg-light" name="an" id="an" required pattern="[0-9\s]{14}" ></div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">Universal Account Number(UAN)</label>
+                                </div>
+                                <div class="col-6"><input type="number" value="{{p.UAN}}" class="form-control text-dark bg-light" name="uan" ></div>
+                            </div>
+                            </div>
+                            <div class=" col-sm-9 col-lg-6">
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">PF Account Number (PFN)</label>
+                                </div>
+                                <div class="col-6"><input type="number" value="{{p.PFN}}" class="form-control text-dark bg-light" name="pfn" ></div>
+                            </div>
+                            <div class="row pb-3">
+                                <div class="col-6">
+                                    <label for="">PR Account Number (PRAN)</label>
+                                </div>
+                                <div class="col-6"><input type="text" value="{{p.PRAN}}" class="form-control text-dark bg-light" name="pran" ></div>
+                            </div>
+                        </div>
+                        </div>
+        
+                    </div>
+                    
+                    <hr>
+                    <div class="action-button">
+                        <button class="btn text-light" type="submit" style="background-color: chocolate; width: 150px; font-size: medium;">Add</button>
+                        <button class="btn btn-danger" type="reset" style="background-color: chocolate; width: 150px; font-size: medium;" onclick="goToTop()">Cancel</button>
+                    </div>
+                </form>
+                <!-- Modal -->
+                <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true" style="margin-top: 8vh;">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content" style="background-color: #3b3b3b;">
+                        <div class="modal-header">
+                          <h3 class="modal-title text-light" id="exampleModalLabel">Add Blood group</h3>
+                          <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="font-size: x-large;">&times;</span>
+                          </button>
+                        </div>
+                        <form action="{% url 'add_blood'  %}" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <input type="text" class="form-control text-light" name="blood">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-warning">Save</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+            </div>
+        </section>
+        </div>
+    </div>
+    </div>
+    </div>
+        
+<script>
+function validateform() {
+    var sal = document.getElementById('sal').value;
+    var amnthr = document.getElementById('amnthr').value;
+    var hours = document.getElementById('hours').value;
+    var fsalary = document.getElementById('fsalary').value;
+    var dropId = document.getElementById('dropId').value;
+    var acc_no = document.getElementById('acc_no').value;
+    var ifsc = document.getElementById('ifsc').value;
+    var b_name = document.getElementById('b_name').value;
+    var branch = document.getElementById('branch').value;
+    var ttype = document.getElementById('ttype').value;
+    var tds = document.getElementById('tds').value;
+    var pora = document.getElementById('pora').value;
+    var pcnt = document.getElementById('pcnt').value;
+    var amnt = document.getElementById('amnt').value;
+    if (sal === 'Variable'){
+        if (amnthr === ''){
+            alert('Add Amount per Hour');
+                return false;
+                }
+    if (hours === ''){
+        alert('Add Total Amount Worked');
+        return false;
+        }
+    }
+    else
+    {
+        if (fsalary === ''){
+            alert('Add Salary');
+            return false;
+            }
+        }
+        if (dropId === '1'){
+            if (acc_no === ''){
+                alert('Add an Account Number');
+                return false;
+                }
+        if (ifsc === ''){
+                alert('Add IFSC code');
+                return false;
+            }
+        if (b_name === ''){
+                alert('Add Bank Name');
+                return false;
+                }
+        if (branch === ''){
+                alert('Add Branch Name');
+                return false;
+                }
+        if (ttype === ''){
+                alert('Select a Transaction Type');
+                return false;
+                }
+            }
+        if (tds === '1'){
+            if (pora === ''){
+                alert('Select TDS Amount Type');
+                return false;
+                }
+                else 
+        if(pora === 'Percentage'){
+            if (pcnt === ''){
+                alert('Add Percentage of TDS');
+                return false;
+                }
+            }
+            else 
+            if(pora === 'Amount'){
+                    if (amnt === ''){
+                        alert('Add TDS Amount');
+                        return false;
+                    }
+                    }
+                }
+                return true; 
+            }
+        </script>
+        
+        <script>
+            const input = document.getElementById("an");
+            input.addEventListener("input", () => input.value = formatNumber(input.value.replaceAll(" ", "")));
+            const formatNumber = (number) => number.split("").reduce((seed, next, index) => {
+                if (index !== 0 && !(index % 4)) seed += " ";
+                return seed + next;
+            }, "");
+        </script>
+        
+        <script>
+            var loadFile = function (event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var output = document.getElementById('img');
+                    output.src = reader.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            };
+        </script>
+        
+        <script>
+            function goToTop() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
+            }
+        
+            $(document).ready(function(){
+                $('#dropId').ready(function(){
+                var e = document.getElementById("dropId").value;
+                if (e == 0) {
+                    document.getElementById("bank").style.display = 'none'
+                }
+                else {
+                    document.getElementById("bank").style.display = 'block'
+                }
+                     
+            })
+            })
+            function bankdisplay() {
+        var e = document.getElementById("dropId").value;
+        if (e == 0) {
+            document.getElementById("bank").style.display = 'none'
+            document.getElementById("acc_no").value = ''
+            document.getElementById("ifsc").value =''
+            document.getElementById("b_name").value = ''
+            document.getElementById("branch").value = ''
+            document.getElementById("ttype").value = ''
+        }
+        else {
+            document.getElementById("bank").style.display = 'block'
+        }
+    }
+        
+            $(document).ready(function() {
+                $('#sal').ready(function(){
+                var e = document.getElementById("sal");
+                var sal = e.value;
+                if (sal == 'Fixed' || sal == 'Temporary') {
+                    document.getElementById("fixed").style.display = 'block'
+                    document.getElementById("variable").style.display = 'none'
+                    document.getElementById("amnthr").value = 0
+                    document.getElementById("hours").value = 0
+                    document.getElementById("vsalary").value = 0
+                }
+                else if (sal == 'Variable') {
+                    document.getElementById("variable").style.display = 'block'
+                    document.getElementById("fixed").style.display = 'none'
+                    document.getElementById("fsalary").value = 0
+                }
+            })
+ })
+            function salFunction() {
+                var e = document.getElementById("sal");
+                var sal = e.value;
+                if (sal == 'Fixed' || sal == 'Temporary') {
+                    document.getElementById("fixed").style.display = 'block'
+                    document.getElementById("variable").style.display = 'none'
+                    document.getElementById("amnthr").value = 0
+                    document.getElementById("hours").value = 0
+                    document.getElementById("vsalary").value = 0
+                }
+                else if (sal == 'Variable') {
+                    document.getElementById("variable").style.display = 'block'
+                    document.getElementById("fixed").style.display = 'none'
+                    document.getElementById("fsalary").value = 0
+                }
+            }
+        
+            $(document).ready(function(){
+                $('#amnthr').ready(function(){
+                var a = document.getElementById("amnthr").value;
+                var h = document.getElementById("hours").value;
+                var tot = h * a;
+                document.getElementById('vsalary').value = tot;
+            })
+            })
+            function calculateAmount() {
+                var a = document.getElementById("amnthr").value;
+                var h = document.getElementById("hours").value;
+                var tot = h * a;
+                console.log(tot)
+                document.getElementById('vsalary').value = tot;
+            }
+        
+            $(document).ready(function(){
+                $('#tds').ready(function(){
+                var e = document.getElementById("tds");
+                var sal = e.value;
+                if (sal == '1') {
+                    document.getElementById("tds-div").style.display = 'block'
+                }
+                else {
+                    document.getElementById("tds-div").style.display = 'none'
+                    document.getElementById("pora").value = 0
+                    document.getElementById("pcnt").value = 0
+                    document.getElementById("amnt").value = 0
+                }
+            })
+            })
+
+        
+           $(document).ready(function(){
+            $('#pora').ready(function(){
+                var e = document.getElementById("pora");
+                var sal = e.value;
+                if (sal == 'Percentage') {
+                    document.getElementById("p").style.display = 'block';
+                    document.getElementById("a").style.display = 'none';
+                    document.getElementById("amnt").value = 0
+                }
+                else if (sal == 'Amount') {
+                    document.getElementById("a").style.display = 'block';
+                    document.getElementById("p").style.display = 'none'
+                    document.getElementById("pcnt").value = 0
+                }
+                })
+            })
+            function tdsFunction() {
+                var e = document.getElementById("tds");
+                var sal = e.value;
+                if (sal == '1') {
+                    document.getElementById("tds-div").style.display = 'block'
+                }
+                else {
+                    document.getElementById("tds-div").style.display = 'none'
+                    document.getElementById("pora").value = 0
+                    document.getElementById("pcnt").value = 0
+                    document.getElementById("amnt").value = 0
+                }
+            }
+        
+            function tdsFunction2() {
+                var e = document.getElementById("pora");
+                var sal = e.value;
+                if (sal == 'Percentage') {
+                    document.getElementById("p").style.display = 'block';
+                    document.getElementById("a").style.display = 'none';
+                    document.getElementById("amnt").value = 0
+                }
+                else if (sal == 'Amount') {
+                    document.getElementById("a").style.display = 'block';
+                    document.getElementById("p").style.display = 'none'
+                    document.getElementById("pcnt").value = 0
+                }
+            }
+        
+            function emailvalidate() {
+                var email = document.getElementById('email')
+                var error = document.getElementById('error')
+                if (!email.value.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) {
+                    error.style.fontSize = ".8rem"
+                    error.innerHTML = "*Please enter a valid email"
+                    return false;
+                }
+                error.innerHTML = ""
+                return true;
+            }
+        
+            function phoneValidate(phn, pherror) {
+                if (!phn.value.match(/^[6-9]\d{9}$/)) {
+                    pherror.style.display = "block"
+                    pherror.style.fontSize = ".8rem"
+                    pherror.innerHTML = "*Please enter a valid phone number"
+                    return false;
+                }
+                pherror.style.display = "none"
+                pherror.innerHTML = ""
+                return true;
+            }
+        
+            function empValidation(emp) {
+                emp.addEventListener("input", function () {
+                    emp.value = emp.value.toUpperCase();
+                });
+            }
+        
+            inputvalue = document.getElementById('ifsc')
+            inputvalue.addEventListener("input", function () {
+                inputvalue.value = inputvalue.value.toUpperCase();
+            });
+            const inputFields = document.querySelectorAll("input[type='text']");
+            inputFields.forEach(function (input) {
+                input.addEventListener("input", function () {
+                    const inputValue = input.value;
+                    input.value = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+                });
+            });
+             
+            $(document).ready(function(){
+                $('#an').ready(function(){
+                    const input = this.value;
+                if (input.length > 14) {
+                    this.value = input.slice(0, 14);
+                }
+                })
+            })
+        
+            document.getElementById("an").addEventListener("input", function () {
+                const input = this.value;
+                if (input.length > 14) {
+                    this.value = input.slice(0, 14);
+                }
+            });
+        
+            document.getElementById("acc_no").addEventListener("input", function () {
+                const input = this.value;
+                if (input.length > 15) {
+                    this.value = input.slice(0, 15);
+                }
+            });
+        
+            $(document).ready(function () {
+                $("#filladdress").on("click", function () {
+                    if (this.checked) {
+                        $("#adrs1").val($("#padrs1").val());
+                        $("#adrs2").val($("#padrs2").val());
+                    }
+                    else {
+                        $("#adrs1").val('');
+                        $("#adrs2").val('');
+                    }
+                });
+            });
+        
+            function calculateAge() {
+                const dobInput = document.getElementById("dob");
+                const selectedDateOfBirth = new Date(dobInput.value);
+                const currentDate = new Date();
+                const age = currentDate.getFullYear() - selectedDateOfBirth.getFullYear();
+                const ageInput = document.getElementById("age");
+                ageInput.value = age;
+            }
+            function clearaddreass(id){
+                document.getElementById('filladdress').checked = false
+                if(id == 'padrs1' || id == 'padrs2'){
+                    $("#adrs1").val('');
+                    $("#adrs2").val('');
+                }
+            }
+        </script>
+        
+
+    </div>
+</div>
+
+
+
+<script>
+    // Function to make the alert blink
+    function blink() {
+        $('#alertMessage').fadeOut(1000).fadeIn(1000, blink);
+    }
+
+    // Call the blink function when the page loads
+    $(document).ready(function() {
+        blink();
+    });
+</script>
+<script>
+    function addOption() {
+      // Prompt the user for the new option value
+      var newOptionValue = prompt("Enter the new option value:");
+  
+      // Check if the user provided a value
+      if (newOptionValue !== null && newOptionValue.trim() !== "") {
+        // Create a new option element
+        var newOption = document.createElement("option");
+        
+        // Set the value and text of the new option
+        newOption.value = newOptionValue;
+        newOption.text = newOptionValue;
+  
+        // Append the new option to the select element
+        document.getElementById("blood").add(newOption);
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+      {% for msg in messages %}
+      swal({
+      title: "{{msg}}",
+      text: "{{msg.tags}}",
+      icon: "{{msg.tags}}",
+    });
+      {% endfor %}
+     </script>
+  
+
+{% endblock %}

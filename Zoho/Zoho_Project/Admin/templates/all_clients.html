@@ -1,0 +1,75 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  table tr:hover {
+    background-color: rgb(55, 54, 54);
+    cursor: pointer;
+}
+</style>
+  
+
+
+<div class="body-wrapper">
+  <div class="container-fluid">
+
+    <nav aria-label="breadcrumb ">
+      <ol class="breadcrumb pt-3">
+        <li class="breadcrumb-item"><a href="{% url 'admindash' %}" class="text-warning">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'admin_clients' %}" class="text-warning"> Clients</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'all_clients' %}" class="text-warning"> All Clients</a></li>
+      </ol>
+  </nav>
+
+     <!-- <h3 class="text-center"><b style=" margin-bottom: 20px;">COMPANY REQUESTS</b></h3> -->
+    
+      <div style="overflow-x:auto;">  
+        {% if clients %}  
+
+        <table class="table   mt-3 " style="background-color: black;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+          <thead>
+              <tr>
+                <th scope="col" style="color: white;"><b>Name</b></th>
+                <th scope="col" style="color: white;"><b>Email</b></th>
+                
+                <th scope="col" style="color: white;"><b>Contact</b></th>
+                <th scope="col" style="color: white;"><b>Payment Terms</b></th>
+                <th scope="col" style="color: white;"><b>End Date</b></th>
+                <th scope="col" style="color: white;"><b>Action</b></th>
+
+              </tr>
+            </thead>
+            <tbody>
+                {% for a in clients %}
+              <tr>
+                <td> 
+                  {% if a.profile_pic %}
+                  <img width="35" height="35" class="rounded-circle" src="{{ a.profile_pic.url }}" alt="">
+                  {% else %}
+                  <img src="{% static 'registration_login/images/default.png' %}" alt="" width="35" height="35" class="rounded-circle">
+                  {% endif %}
+                  <a href="{% url 'client_details' a.id %}" class="text-light">{{a.login_details.first_name}} </a>
+                </td>
+                <td class="text-light">{{a.login_details.email}}</td>
+                <td class="text-light">{{a.contact}}</td>
+                <td class="text-light">{{a.payment_term.payment_terms_number}} {{a.payment_term.payment_terms_value}}</td>
+                <td class="text-light">{{a.End_date}}</td>
+                <td>
+                <a href="{% url 'admin_client_cancel' a.id %}" class="btn btn-outline-warning btn-sm m-1 text-light" >Cancel</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table> 
+        </div>
+        {% else %}
+        <div class="d-flex justify-content-center">
+          <img src="{% static 'assets\images\no-data-file.png' %}">
+        </div>
+        {% endif %}
+
+  </div>
+</div>
+</body>
+
+{% endblock %}

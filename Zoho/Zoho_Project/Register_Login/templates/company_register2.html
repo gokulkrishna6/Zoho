@@ -1,0 +1,283 @@
+{% extends 'registration_login_base.html' %}
+{% load static %}
+
+{% block title %}
+Welcome to Zoho Books
+{% endblock %}
+
+{% block body %}
+<style>
+    .bg-warning {
+        --bs-bg-opacity: .75;
+        background-color: rgba(var(--bs-warning-rgb), var(--bs-bg-opacity)) !important;
+    }
+    
+</style>
+
+<div class="row">
+	<div class="col-md-1 mt-3"></div>
+	<div class="col-md-10 mt-5">
+		<div class="card mb-3 shadow mb-5 rounded-5" style="max-width: 100%;background-color: rgb(30, 30, 30);border: 1px solid rgba(255, 255, 255, 0.25);">
+			<div class="row g-0">
+			  <div class="col-md-5 rounded-5" style="background-color: rgb(218, 164, 48);">
+                <div class="row mt-3">
+                    <h2 class="text-center text-light mt-2 mb-3 fw-bold">Zoho is even better with an account !</h2>
+                    <img src="{% static 'registration_login/images/pnglogin.png' %}" class="img-fluid rounded mt-2" alt="img">
+                </div>
+                <center>
+                    <div class="row mt-5 mb-4">
+                        <a href="{% url 'login_page' %}"><button type="submit" class="button2"><i class="fas fa-user"></i><span class="ms-1">Login</span></button></a>
+                    </div>
+                </center>
+			  </div>
+			  <div class="col-md-7 text-white">
+				<div class="card-body">
+					<div class="row mt-3">
+						{% if messages %}
+							{% for message in messages %}
+								<label id="messageLabel" for="" class="text-center mt-2 mb-1 rounded-3 mx-3" style="background-color: rgb(255, 0, 0,0.5); width: 92%;color:white;">{{message}}</label>
+							{% endfor %}
+							<script>
+								// Add a script to hide the messages after a few seconds
+								setTimeout(function() {
+									var messageLabel = document.getElementById('messageLabel');
+									if (messageLabel) {
+										messageLabel.style.display = 'none';
+									}
+								}, 5000); // 5000 milliseconds = 5 seconds (adjust the time as needed)
+							</script>
+						{% endif %}
+					</div>
+					<div class="row">
+						<form action="{% url 'company_registration_save2' company_id %}" method="post" enctype="multipart/form-data">
+							{% csrf_token %}
+                        <div class="container">
+                            <div class="form-group ">
+                                <h4 class="text-light mb-4 mt-4">Company Details</h4>
+                
+                                <input type="text" id="cname" name="cname" class="form-control mt-5 mb-4" placeholder="enter company name" required>                
+                                <input type="number" id="phone" name="phone" class="form-control mt-4 mb-4" placeholder="enter phone number" pattern="[7896][0-9]{9}" title="Phone number should contain 10 digits and start with 7,8,9 or 6." required>
+                                <input type="text" id="address" name="address" class="form-control mt-4 mb-4" placeholder="enter address" required>
+                                <input type="text" id="city" name="city" class="form-control mt-4 mb-4" placeholder="enter city" required>
+                                <select type="text" class="form-select mt-4 mb-4" id="state" name="state">
+                                    <option value="" hidden>Select State</option>
+                                    <option value="[AN]-Andaman And Nicobar Islands">[AN]-Andaman And Nicobar Islands</option> <option value="[AD]-Andhra Pradesh">[AD]-Andhra Pradesh</option>
+                                    <option value="[AR]-Arunachal Pradesh">[AR]-Arunachal Pradesh	</option> <option value="volvo">[AS]-Assam</option>
+                                    <option value="[BR]-Bihar">[BR]-Bihar</option> <option value="volvo">[CH]-	Chandhigarh</option><option value="[CG]-Chattisgarh">[CG]-Chattisgarh</option>
+                                    <option value="[DD]-Daman Diu">[DD]-Daman Diu</option><option value="volvo">[DL]-	Delhi</option><option value="[GA]-Goa">[GA]-Goa</option> <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
+                                    <option value="[HR]-Haryana">[HR]-Haryana</option> <option value="[HP]-Himachal Pradesh">[HP]-Himachal Pradesh</option>
+                                    <option value="[JK]-Jammu And Kashmir">[JK]-Jammu And Kashmir</option><option value="[JH]-Jharkand">[JH]-Jharkand</option>
+                                    <option value="[KA]-Karnataka">[KA]-Karnataka</option><option value="[KL]-Kerala">[KL]-Kerala</option>
+                                    <option value="[LA]-Ladakh">[LA]-Ladakh</option><option value="[LD]-Lakshadweep">[LD]-Lakshadweep</option>
+                                    <option value="[MP]-Madhyapradesh">[MP]-Madhyapradesh</option><option value="[MH]-Maharashtra">[MH]-Maharashtra</option>
+                                    <option value="[MN]-Manipur">[MN]-Manipur</option>  <option value="[ML]-Meghalaya">[ML]-Meghalaya</option>
+                                    <option value="[MZ]-Mizoram">[MZ]-Mizoram</option> <option value="[NL]-Nagaland">[NL]-Nagaland</option> <option value="[NL]-Nagaland">[NL]-Nagaland</option>
+                                    <option value="[OD]-Odisha">[OD]-Odisha</option><option value="[PY]-Puducherry">[PY]-Puducherry</option>
+                                    <option value="[PB]-Punjab">[PB]-Punjab.</option><option value="[RL]-Rajasthan">[RL]-Rajasthan</option>
+                                    <option value="[SK]-Sikkim">[SK]-Sikkim</option><option value="[TN]-Tamilnadu">[TN]-Tamilnadu</option>
+                                    <option value="[TS]-Telenghana">[TS]-Telenghana</option><option value="[TR]-Tripura">[TR]-Tripura</option><option value="[UP]-Uttar Pradesh">[UP]-Uttar Pradesh</option>
+                                    <option value="[UK]-Utharakhand">[UK]-Utharakhand</option><option value="[WB]-West Bengal">[WB]-West Bengal</option>
+                                    <option value="[OT]-Other Territory">[OT]-Other Territory</option>
+                                </select>
+                                <input type="text" id="country" name="country" class="form-control mt-4 mb-4" placeholder="country" required>
+                                <input type="number" id="pincode" name="pincode" class="form-control mt-4 mb-4" placeholder="pincode" required>
+                                <input type="text" id="pannumber" name="pannumber" class="form-control mt-4 mb-4" placeholder="pan number" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="PAN Number should be in the format 'ABCDE1234A'" required>
+                                <select class="form-select mt-4 mb-4" name="gsttype" id="gsttype"
+                                    onclick="hidinput('hello', this),disinput('hai', this) ,disinput2('hai1', this)">
+                                    <option value="" hidden>Select GST Type</option>
+                                    <option value="Registered Business - Regular">Registered Business - Regular
+                                        <span><i>(Business that is registered under gst)</i></span>
+                                    </option>
+                                    <option value="Registered Business - Composition">Registered Business - Composition
+                                        (Business that is registered under composition scheme in gst)</option>
+                                    <option value="unregistered Business">Unregistered Business (Business that has not
+                                        been registered under gst)</option>
+                                    <option value="Overseas">Overseas (Import/Export of supply outside india)</option>
+                                    <option value="Consumer">Consumer</option>
+                                </select>
+                                <input type="text" name="gstno" id="gstno" placeholder="GST Number" class="gstno form-control mt-4 mb-4" style="display: none;" pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$" title="GST Number should be in the format '11AAAAA1111A1ZA'">
+                                <input type="file" id="image" name="image" accept="image/*" class="form-control mt-4 mb-4">
+                                <select name="select" id="select" class="form-select mt-4 mb-4" required>
+                                    <option value="" hidden>Choose Payment terms</option>
+                                    {% for t in terms %}
+                                    <option value="{{t.id}}" data-terms="{{ t.id}}">{{t.payment_terms_number}}
+                                        {{t.payment_terms_value}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <center>
+								<div class="row mt-4 mb-4">
+									<a href=""><button type="submit" class="button1 mb-1"><span>Next Page</span></button></a>
+								</div>
+							</center>
+                        </div>
+                            
+						</form>	
+					</div> 
+				</div>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-1 mt-3"></div>
+</div>
+
+
+
+
+
+<style>
+    .button1 {
+      border-radius: 8px;
+      background-color: rgb(218, 164, 48);;
+      border: none;
+      color: #ffffff;
+      text-align: center;
+      font-size: 18px;
+      padding: 6px;
+      width: 160px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    .button1 span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+    
+    .button1 span:after {
+      content: '\00bb';
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+    }
+    
+    .button1:hover span {
+      padding-right: 20px;
+    }
+    
+    .button1:hover span:after {
+      opacity: 1;
+      right: 0;
+    }
+    
+</style>
+<style>
+    .button2 {
+      border-radius: 8px;
+      background-color: rgb(30, 30, 30);;
+      border: none;
+      color: #ffffff;
+      text-align: center;
+      font-size: 18px;
+      padding: 6px;
+      width: 150px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    .button2 span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+    
+    .button2 span:after {
+      content: '\00bb';
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+    }
+    
+    .button2:hover span {
+      padding-right: 20px;
+    }
+    
+    .button2:hover span:after {
+      opacity: 1;
+      right: 0;
+    }
+    
+</style>
+
+<script>
+    $('#pass, #cpass').on('keyup', function () {
+        var passValue = $('#pass').val();
+        var cpassValue = $('#cpass').val();
+
+        if (passValue === '' || cpassValue === '') {
+            // If either password field is empty, show no message
+            $('#message').html('');
+        } else if (passValue === cpassValue) {
+            // If passwords match, show a matching message in green
+            $('#message').html('Password Is Matching').css('color', 'green');
+        } else {
+            // If passwords don't match, show a non-matching message in red
+            $('#message').html('Password Is Not Matching').css('color', 'red');
+        }
+    });
+
+    function hidinput(divId, element) {
+        if (element.value == 'GST-registered-Regular' || element.value == 'Consumer' || element.value == 'Overseas') {
+            document.getElementById(divId).style.display = 'block';
+        } else {
+            document.getElementById(divId).style.display = 'none';
+        }
+    }
+
+    function disinput(divId, element) {
+        if (element.value == 'GST-registered-Regular') {
+            document.getElementById(divId).style.display = 'block';
+        } else {
+            document.getElementById(divId).style.display = 'none';
+        }
+    }
+
+    function disinput2(divId, element) {
+        if (element.value == 'GST-registered-Regular') {
+            document.getElementById(divId).style.display = 'block';
+        } else {
+            document.getElementById(divId).style.display = 'none';
+        }
+    }
+
+    $(document).ready(function () {
+        $("#gsttype").change(function () {
+            var x = $('#gsttype').val();
+            if (x == "unregistered Business") {
+                $(".gstno").removeClass('d-block');
+                $(".gstno").addClass('d-none');
+
+            }
+            else if (x == 'Overseas') {
+                $(".gstno").removeClass('d-block');
+                $(".gstno").addClass('d-none');
+            }
+            else if (x == 'Consumer') {
+                $(".gstno").removeClass('d-block');
+                $(".gstno").addClass('d-none');
+            }
+            else {
+                $(".gstno").removeClass('d-none');
+                $(".gstno").addClass('d-block');
+            }
+
+        });
+    });
+
+</script>
+
+
+
+
+{% endblock %}

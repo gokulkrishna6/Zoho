@@ -1,0 +1,506 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block content %}
+
+<div class="body-wrapper">
+  <div class="container-fluid">
+      <div class="container mt-5 mr-5 " style="background-color: black;">
+          <h4 class="text-center h4 mb-5 pt-5 text-light" >CLIENT
+                  DETAILS</h4>
+          <hr>
+
+          <center>
+              {% if data.company.image %}
+              <img class="img-thumbnail" width="30%" src="{{ data.company.image.url }}" alt="">
+              {% else %}
+              <img src="{% static 'registration_login/images/default.png' %}" width="20%" wi class="img-thumbnail">
+              {% endif %}
+          </center>
+          <h3 class="h3 text-center py-4 text-light"><b>{{data.company.login_details.first_name}} {{data.company.login_details.last_name}}</b></h3>
+
+          <hr>
+          
+          <div class="row p-5 pb-3 pt-3 ">
+              <div class="col-md-6">
+                  <h5 class="h5 text-light" style="margin-right: 10px;"> Company Code </h5>
+              </div>
+              <div class="col-md-6">
+                  <h5 class="h5 text-light ">: {{data.company.company_code}}</h5>
+              </div>
+          </div>
+
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  Email </h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light">: {{data.company.login_details.email}}</h5>
+              </div>
+          </div>
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  User Name</h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light"> : {{data.company.login_details.username}}</h5>
+              </div>
+          </div>
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  Contact </h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light"> : {{data.company.contact}}</h5>
+              </div>
+          </div>
+          
+          
+          
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  Payment Terms </h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light" > : {{data.company.payment_term.payment_terms_number}}
+                          {{data.company.payment_term.payment_terms_value}}</h5>
+              </div>
+          </div>
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  End Date</h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light">  : {{data.company.End_date}}</h5>
+              </div>
+          </div>
+          
+        
+          <div class="row px-3 py-4">
+            <div class="col-md-6" style="background-color: #20201f;">
+                <h3 class="h4 p-5 pb-3 pt-3 text-light">Existing Modules</h4>
+                    <hr>
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Items</h5>
+                            {% if old_modules.items == 1 %}
+                            <b> </b>Items <br>
+                            {% endif %}
+    
+                            {% if old_modules.price_list == 1 %}
+                            <b> </b>Price List <br>
+                            {% endif %}
+    
+                            {% if old_modules.stock_adjustment == 1 %}
+                            <b> </b>Stock Adjustment <br>
+                            {% endif %}
+    
+                            {% if old_modules.godown == 1 %}
+                            <b> </b>Godown <br>
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">Cash & Bank</h5>
+    
+                            {% if old_modules.cash_in_hand == 1 %}
+                            <b> </b>Cash In Hand <br>
+                            {% endif %}
+    
+                            {% if old_modules.offline_banking == 1 %}
+                            <b> </b> Offline Banking <br>
+                            {% endif %}
+    
+                            {% if old_modules.upi == 1 %}
+                            <b> </b> UPI <br>
+                            {% endif %}
+    
+                            {% if old_modules.bank_holders == 1 %}
+                            <b> </b> Bank Holders <br>
+                            {% endif %}
+    
+                            {% if old_modules.cheques == 1 %}
+                            <b> </b> Cheques <br>
+                            {% endif %}
+    
+                            <!-- {% if old_modules.reconciliation == 1 %}
+                            <b> </b> Reconciliation <br>
+                            {% endif %} -->
+    
+                            {% if old_modules.Loan_account == 1 %}
+                            <b> </b> Loan Accounts <br>
+                            {% endif %}
+    
+    
+                        </div>
+                        
+                    </div>
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Sales</h5>
+    
+                            {% if old_modules.invoice == 1 %}
+                            <b> </b> Invoice <br>
+                            {% endif %}
+    
+                            {% if old_modules.recurring_invoice == 1 %}
+                            <b> </b> Recurring Invoice <br>
+                            {% endif %}
+    
+                            {% if old_modules.retainer_invoice == 1 %}
+                            <b> </b> Retainer Invoice <br>
+                            {% endif %}
+    
+    
+                            {% if old_modules.Estimate == 1 %}
+                            <b> </b> Estimate/ Quotation <br>
+                            {% endif %}
+    
+                            {% if old_modules.Payment_in == 1 %}
+                            <b> </b> Payment In <br>
+                            {% endif %}
+    
+                            {% if old_modules.sales_order == 1 %}
+                            <b> </b> Sale Order <br>
+                            {% endif %}
+    
+                            {% if old_modules.Delivery_challan == 1 %}
+                            <b> </b> Delivery Challan <br>
+                            {% endif %}
+    
+                            {% if old_modules.credit_note == 1 %}
+                            <b> </b> Credit Note <br>
+                            {% endif %}
+    
+                            {% if old_modules.payment_received == 1 %}
+                            <b> </b> Payment Received <br>
+                            {% endif %}
+    
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">Purchase</h5>
+                            {% if old_modules.bills == 1 %}
+                            <b> </b>Bills <br>
+                            {% endif %}
+    
+                            {% if old_modules.recurring_bills == 1 %}
+                            <b> </b> Recurring Bills<br>
+                            {% endif %}
+    
+                            {% if old_modules.vendor_credit == 1 %}
+                            <b> </b> Vendor Credit<br>
+                            {% endif %}
+    
+                            {% if old_modules.Purchase_order == 1 %}
+                            <b> </b>Purchase Order <br>
+                            {% endif %}
+    
+                            {% if old_modules.recurring_expenses == 1 %}
+                            <b> </b>Recurring Expenses <br>
+                            {% endif %}
+    
+                            {% if old_modules.expenses == 1 %}
+                            <b> </b>Expenses <br>
+                            {% endif %}
+    
+                            {% if old_modules.payment_made == 1 %}
+                            <b> </b>Payment Made <br>
+                            {% endif %}
+    
+                        </div>
+                    </div>
+    
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Pay Roll</h5>
+                            {% if old_modules.employees == 1 %}
+                            <b> </b>Employees <br>
+                            {% endif %}
+    
+                            {% if old_modules.holiday == 1 %}
+                            <b> </b>Holiday <br>
+                            {% endif %}
+    
+                            {% if old_modules.attendance == 1 %}
+                            <b> </b>Attendance <br>
+                            {% endif %}
+    
+                            {% if old_modules.salary_details == 1 %}
+                            <b> </b>Salary Details <br>
+                            {% endif %}
+                           
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">Accounts</h5>
+    
+                            {% if old_modules.chart_of_accounts == 1 %}
+                            <b> </b>Chart of Accounts <br>
+                            {% endif %}
+    
+                            {% if old_modules.manual_journal == 1 %}
+                            <b> </b>Manual Journal <br>
+                            {% endif %}
+    
+    
+                        </div>
+                        
+                    </div>
+    
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Time Tracking</h5>
+                            {% if old_modules.projects == 1 %}
+                            <b> </b>Projects <br>
+                            {% endif %}
+                           
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">E-Way Bill</h5>
+    
+                            {% if old_modules.eway_bill == 1 %}
+                            <b> </b>E-Way Bill <br>
+                            {% endif %}
+    
+    
+                        </div>
+                        
+                    </div>
+    
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Reports</h5>
+                            {% if old_modules.reports == 1 %}
+                            <b> </b>Reports <br>
+                            {% endif %}
+    
+                        </div>
+                        <div class="col">
+                        </div>
+                        
+                    </div>
+            </div>
+            <div class="col-md-6" style="background-color: #20201f;">
+                <h3 class="h4 p-5 pb-3 pt-3 text-light">New Modules</h4>
+                    <hr>
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Items</h5>
+                            {% if allmodules.items == 1 %}
+                            <b> </b>Items <br>
+                            {% endif %}
+    
+                            {% if allmodules.price_list == 1 %}
+                            <b> </b>Price List <br>
+                            {% endif %}
+    
+                            {% if allmodules.stock_adjustment == 1 %}
+                            <b> </b>Stock Adjustment <br>
+                            {% endif %}
+    
+                            {% if allmodules.godown == 1 %}
+                            <b> </b>Godown <br>
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">Cash & Bank</h5>
+    
+                            {% if allmodules.cash_in_hand == 1 %}
+                            <b> </b>Cash In Hand <br>
+                            {% endif %}
+    
+                            {% if allmodules.offline_banking == 1 %}
+                            <b> </b> Offline Banking <br>
+                            {% endif %}
+    
+                            {% if allmodules.upi == 1 %}
+                            <b> </b> UPI <br>
+                            {% endif %}
+    
+                            {% if allmodules.bank_holders == 1 %}
+                            <b> </b> Bank Holders <br>
+                            {% endif %}
+    
+                            {% if allmodules.cheques == 1 %}
+                            <b> </b> Cheques <br>
+                            {% endif %}
+    
+                            <!-- {% if allmodules.reconciliation == 1 %}
+                            <b> </b> Reconciliation <br>
+                            {% endif %} -->
+    
+                            {% if allmodules.Loan_account == 1 %}
+                            <b> </b> Loan Accounts <br>
+                            {% endif %}
+    
+    
+                        </div>
+                        
+                    </div>
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Sales</h5>
+    
+                            {% if allmodules.invoice == 1 %}
+                            <b> </b> Invoice <br>
+                            {% endif %}
+    
+                            {% if allmodules.recurring_invoice == 1 %}
+                            <b> </b> Recurring Invoice <br>
+                            {% endif %}
+    
+                            {% if allmodules.retainer_invoice == 1 %}
+                            <b> </b> Retainer Invoice <br>
+                            {% endif %}
+    
+    
+                            {% if allmodules.Estimate == 1 %}
+                            <b> </b> Estimate/ Quotation <br>
+                            {% endif %}
+    
+                            {% if allmodules.Payment_in == 1 %}
+                            <b> </b> Payment In <br>
+                            {% endif %}
+    
+                            {% if allmodules.sales_order == 1 %}
+                            <b> </b> Sale Order <br>
+                            {% endif %}
+    
+                            {% if allmodules.Delivery_challan == 1 %}
+                            <b> </b> Delivery Challan <br>
+                            {% endif %}
+    
+                            {% if allmodules.credit_note == 1 %}
+                            <b> </b> Credit Note <br>
+                            {% endif %}
+    
+                            {% if allmodules.payment_received == 1 %}
+                            <b> </b> Payment Received <br>
+                            {% endif %}
+    
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">Purchase</h5>
+                            {% if allmodules.bills == 1 %}
+                            <b> </b>Bills <br>
+                            {% endif %}
+    
+                            {% if allmodules.recurring_bills == 1 %}
+                            <b> </b> Recurring Bills<br>
+                            {% endif %}
+    
+                            {% if allmodules.vendor_credit == 1 %}
+                            <b> </b> Vendor Credit<br>
+                            {% endif %}
+    
+                            {% if allmodules.Purchase_order == 1 %}
+                            <b> </b>Purchase Order <br>
+                            {% endif %}
+    
+                            {% if allmodules.recurring_expenses == 1 %}
+                            <b> </b>Recurring Expenses <br>
+                            {% endif %}
+    
+                            {% if allmodules.expenses == 1 %}
+                            <b> </b>Expenses <br>
+                            {% endif %}
+    
+                            {% if allmodules.payment_made == 1 %}
+                            <b> </b>Payment Made <br>
+                            {% endif %}
+    
+                        </div>
+                    </div>
+    
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Pay Roll</h5>
+                            {% if allmodules.employees == 1 %}
+                            <b> </b>Employees <br>
+                            {% endif %}
+    
+                            {% if allmodules.holiday == 1 %}
+                            <b> </b>Holiday <br>
+                            {% endif %}
+    
+                            {% if allmodules.attendance == 1 %}
+                            <b> </b>Attendance <br>
+                            {% endif %}
+    
+                            {% if allmodules.salary_details == 1 %}
+                            <b> </b>Salary Details <br>
+                            {% endif %}
+                           
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">Accounts</h5>
+    
+                            {% if allmodules.chart_of_accounts == 1 %}
+                            <b> </b>Chart of Accounts <br>
+                            {% endif %}
+    
+                            {% if allmodules.manual_journal == 1 %}
+                            <b> </b>Manual Journal <br>
+                            {% endif %}
+    
+    
+                        </div>
+                        
+                    </div>
+    
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Time Tracking</h5>
+                            {% if allmodules.projects == 1 %}
+                            <b> </b>Projects <br>
+                            {% endif %}
+                           
+                        </div>
+                        <div class="col">
+                            <h5 class="text-light">E-Way Bill</h5>
+    
+                            {% if allmodules.eway_bill == 1 %}
+                            <b> </b>E-Way Bill <br>
+                            {% endif %}
+    
+    
+                        </div>
+                        
+                    </div>
+    
+                    <div class="row p-3" style="margin-left: 20px;">
+                        <div class="col">
+                            <h5 class="text-light">Reports</h5>
+                            {% if allmodules.reports == 1 %}
+                            <b> </b>Reports <br>
+                            {% endif %}
+    
+                        </div>
+                        <div class="col">
+                        </div>
+                        
+                    </div>
+            </div>
+          </div>
+         
+           
+               
+          <div class="row pb-5">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <a href="{% url 'module_updation_ok' data.company.id %}" class="btn btn-outline-warning"  style="width: 100%;">Approve</a>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+          
+                  
+              
+          </div>
+
+
+
+      </div>
+
+
+
+  </div>
+</div>
+
+{% endblock %}

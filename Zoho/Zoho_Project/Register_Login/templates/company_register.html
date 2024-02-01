@@ -1,0 +1,218 @@
+{% extends 'registration_login_base.html' %}
+{% load static %}
+
+{% block title %}
+Welcome to Zoho Books
+{% endblock %}
+
+{% block body %}
+<style>
+  .bg-warning {
+    --bs-bg-opacity: .75;
+    background-color: rgba(var(--bs-warning-rgb), var(--bs-bg-opacity)) !important;
+  }
+    
+</style>
+
+<div class="row">
+	<div class="col-md-1 mt-3"></div>
+	<div class="col-md-10 mt-5">
+		<div class="card mb-3 shadow mb-5 rounded-5" style="max-width: 100%;background-color: rgb(30, 30, 30);border: 1px solid rgba(255, 255, 255, 0.25);">
+			<div class="row g-0">
+			  <div class="col-md-5 rounded-5" style="background-color: rgb(218, 164, 48);">
+          <div class="row mt-3">
+              <h2 class="text-center text-light mt-2 mb-3 fw-bold">Zoho is even better with an account !</h2>
+              <img src="{% static 'registration_login/images/pnglogin.png' %}" class="img-fluid rounded" alt="img">
+          </div>
+          <center>
+              <div class="row mt-4 mb-4">
+                  <a href="{% url 'login_page' %}"><button type="submit" class="button2"><i class="fas fa-user"></i><span class="ms-1">Login</span></button></a>
+              </div>
+          </center>
+			  </div>
+			  <div class="col-md-7 text-white">
+          <div class="card-body">
+            <div class="row mt-3">
+              {% if messages %}
+                {% for message in messages %}
+                  <label id="messageLabel" for="" class="text-center mt-2 mb-1 rounded-3 mx-3" style="background-color: rgb(255, 0, 0,0.5); width: 92%;color:white;">{{message}}</label>
+                {% endfor %}
+                <script>
+                  // Add a script to hide the messages after a few seconds
+                  setTimeout(function() {
+                    var messageLabel = document.getElementById('messageLabel');
+                    if (messageLabel) {
+                      messageLabel.style.display = 'none';
+                    }
+                  }, 5000); // 5000 milliseconds = 5 seconds (adjust the time as needed)
+                </script>
+              {% endif %}
+            </div>
+            <div class="row">
+              <form action="{% url 'company_registration_save1' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="container">
+                  <div class="form-group ">
+                    <h4 class="text-light mb-4 mt-5">Basic Details</h4>
+      
+                    <input type="text" id="fname" name="fname" class="form-control mt-4 mb-4" placeholder="enter firstname" required>
+                    <input type="text" id="lname" name="lname" class="form-control mt-4 mb-4" placeholder="enter lastname" required>
+                    <input type="email" id="eid" name="eid" class="form-control mt-4 mb-4" placeholder="enter email" required>
+                    <input type="text" id="uname" name="uname" class="form-control mt-4 mb-4" placeholder="enter username" required>
+                    <input type="password" id="pass" name="pass" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control mt-4 mb-4" placeholder="enter password" title="*password must be at least 8 characters long and include uppercase , lowercase, special characters and numbers." required>
+                    <input type="password" id="cpass" name="cpass" class="form-control mt-1 mb-1" placeholder="conform password"  required>
+                    <span id='message'></span>
+                    <p class="text-warning mt-3">How do you Register...?</p>
+                    <div class="row mt-3">
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input class="form-check-input bg-warning" type="radio" name="self_distributor" id="distributor" value="distributor" onclick="show()" required>
+                          <label class="form-check-label">
+                            By the Distributor
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input class="form-check-input bg-warning" type="radio" name="self_distributor" id="self" value="self" onclick="show2()" required>
+                          <label class="form-check-label">
+                            By Self
+                          </label>
+                        </div>
+                      </div>
+                    </div>    
+                    <input type="text" id="did" name="did" style="display: none;" class="form-control mt-3" placeholder="enter distributor id">
+                  </div>
+                  <center>
+                    <div class="row mt-4 mb-4">
+                      <a href=""><button type="submit" class="button1 mb-1"><span>Next Page</span></button></a>
+                    </div>
+                  </center>
+                </div>                              
+              </form>	
+            </div> 
+          </div>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-1 mt-3"></div>
+</div>
+
+
+
+
+
+<style>
+  .button1 {
+    border-radius: 8px;
+    background-color: rgb(218, 164, 48);;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    font-size: 18px;
+    padding: 6px;
+    width: 160px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+  }
+  
+  .button1 span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  
+  .button1 span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+  
+  .button1:hover span {
+    padding-right: 20px;
+  }
+  
+  .button1:hover span:after {
+    opacity: 1;
+    right: 0;
+  }
+    
+</style>
+<style>
+  .button2 {
+    border-radius: 8px;
+    background-color: rgb(30, 30, 30);;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    font-size: 18px;
+    padding: 6px;
+    width: 150px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+  }
+  
+  .button2 span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  
+  .button2 span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+  
+  .button2:hover span {
+    padding-right: 20px;
+  }
+  
+  .button2:hover span:after {
+    opacity: 1;
+    right: 0;
+  }
+    
+</style>
+
+<script>
+  $('#pass, #cpass').on('keyup', function () {
+    var passValue = $('#pass').val();
+    var cpassValue = $('#cpass').val();
+
+    if (passValue === '' || cpassValue === '') {
+      // If either password field is empty, show no message
+      $('#message').html('');
+    } else if (passValue === cpassValue) {
+      // If passwords match, show a matching message in green
+      $('#message').html('Password Is Matching').css('color', 'green');
+    } else {
+      // If passwords don't match, show a non-matching message in red
+      $('#message').html('Password Is Not Matching').css('color', 'red');
+    }
+  });
+
+  function show() {
+    document.getElementById('did').style.display = 'block';
+  
+
+  }
+  function show2() {
+    document.getElementById('did').style.display = 'none';
+  
+
+  }
+</script>
+
+{% endblock %}

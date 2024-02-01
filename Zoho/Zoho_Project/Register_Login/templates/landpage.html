@@ -1,0 +1,234 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <style>
+      #section1{
+        height: 100vh;
+      }
+      .footer {
+        background-color: #f2f2f2;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .footer p {
+        margin: 0;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      .footer-links li {
+        margin-right: 20px;
+      }
+
+      .footer-links li:last-child {
+        margin-right: 0;
+      }
+
+      .footer-links a {
+        text-decoration: none;
+        color: #333;
+      }
+
+      .footer-links a:hover {
+        color: #007bff;
+      }
+      .card {
+      opacity: 0; /* Initially set the opacity to 0 */
+      animation: fadeIn 4s forwards; /* Apply the fadeIn animation with 1 second duration */
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1; /* At the end of the animation, set the opacity to 1 */
+      }
+    }
+    </style>
+<section id="section1" class="text-white container-fluid banner d-flex justify-content-center align-items-center p-5 mt-5 mb-5">
+  <div class="row">
+    <div class="col-sm-6 d-flex flex-column justify-content-center align-items-center mt-5">
+      <h4>Zoho Books is a comprehensive cloud accounting platform that takes care of your business finance.</h4>
+      <div class="mt-3"> <!-- Add a new <div> to create a new line for the "Get Start" link -->
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <img width="100%" src="{% static 'registration_login/images/pngwing.com.png' %}" alt="">
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="container-fluid tbanner" id="Services">
+  <center>
+    <h3 class="p-3 text-black mt-3 mb-3">Services</h3>
+  </center>
+<div class="row">
+  <div class="col-sm-4">
+    <div class="card bo fade-in">
+      <img src="https://img.freepik.com/free-vector/vector-banner-payroll-salary-payment_107791-8438.jpg?w=740&t=st=1690005148~exp=1690005748~hmac=e954336ed678e4936c3e0756b7a86ab4dba47c8b56ebde7a03c538a24c8723a7" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Payroll Accounting</h5>
+        <p class="card-text">Content for Card 3 goes here.</p>
+        <a href="#" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card bo fade-in">
+      <img src="https://img.freepik.com/free-vector/auditor-concept-business-operation-specialist-professional-financial-management-financial-inspection-analytics-isolated-flat-vector-illustration_613284-2577.jpg?w=740&t=st=1690005195~exp=1690005795~hmac=1d181b5e421f6255177daa745185d2fe66806014870d41bc35ec52a0646e7a23" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Internal Auditing</h5>
+        <p class="card-text">Content for Card 2 goes here.</p>
+        <a href="#" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card bo fade-in">
+      <img src="https://img.freepik.com/premium-photo/calculator-coins-other-business-objects-tax-business-finance_220873-10830.jpg?w=740" alt="">
+      <div class="card-body">
+        <h5 class="card-title">Tax Accounting</h5>
+        <p class="card-text">Content for Card 1 goes here.</p>
+        <a href="#" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-4">
+    <div class="card bo fade-in">
+      <img src="https://img.freepik.com/free-photo/man-with-papers_1098-15660.jpg?w=740&t=st=1690004849~exp=1690005449~hmac=afca6f7ddab21d41a8caea0644cdeb509a3a226f0246a46c62bf2ba10e92727b" alt="">
+      <div class="card-body">
+        <h5 class="card-title">investment services</h5>
+        <p class="card-text">Content for Card 4 goes here.</p>
+        <a href="#" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card bo fade-in">
+      <img src="https://img.freepik.com/free-photo/closeup-economist-using-calculator-while-going-through-bills-taxes-office_637285-3156.jpg?w=740&t=st=1690004883~exp=1690005483~hmac=ad0196d153d36aca676534c07c0c9b19661ffd8a60a0cdc0385d8eafec461209" alt="">
+      <div class="card-body">
+        <h5 class="card-title">merger audits</h5>
+        <p class="card-text">Content for Card 3 goes here.</p>
+        <a href="#" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card bo fade-in">
+      <img src="https://img.freepik.com/premium-photo/data-analysis-business-finance-concept_31965-4147.jpg?w=740" alt="">
+      <div class="card-body">
+        <h5 class="card-title">insolvency services</h5>
+        <p class="card-text">Content for Card 2 goes here.</p>
+        <a href="#" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="container-fluid mt-3 mb-3" style="background-color: black;height: 100%;" id="contact">
+  <center>
+    <h3 class="p-3 text-white mt-3 mb-3">Contact Us</h3>
+  </center>
+  <div class="container">
+    <div class="row fade-in">
+
+      <div class="col-lg-6">
+
+        <div class="row text-white">
+          <div class="col-md-12">
+            <div class="info-box" data-aos="fade-up">
+              <i class="fa fa-map-marker" style="font-size:30px"></i>
+              <h3>Our Address</h3>
+              <p>1st Floor - Thapasya Building Infopark Kakkanad, Cochin</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-box mt-4" data-aos="fade-up" data-aos-delay="100">
+              <i class="fa fa-envelope" style="font-size:30px"></i>
+              <h3>Email Us</h3>
+              <p>zohobooks@gmail.com<br>info@altostechnologies.com</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-box mt-4" data-aos="fade-up" data-aos-delay="100">
+              <i class="fa fa-phone" style="font-size:30px"></i>
+              <h3>Call Us</h3>
+              <p>+91  9074156818<br>+91 9995805299</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+  
+      <div class="col-md-6">
+        <iframe class="mb-3" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12345.6789!2d-71.0589!3d42.3601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e3659bf7f0eeb7%3A0x383ddecdecb1a6b2!2sBoston%2C%20MA%2C%20USA!5e0!3m2!1sen!2sin!4v1627023087472!5m2!1sen!2sin" 
+        width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+  
+</section>
+    
+<section class="container-fluid mt-3 mb-3" id="about">
+  <center>
+    <h3 class="p-3 text-dark">About Us</h3> 
+  </center>
+ 
+  <section class="about-us">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>About Our Accounting Firm</h2>
+          <p>
+            [Your accounting firm name] is a trusted and reputable accounting firm dedicated to providing top-notch financial services and solutions. With a team of highly skilled and experienced accountants, we cater to businesses of all sizes and individuals seeking professional financial guidance.
+          </p>
+          <p>
+            Our mission is to help our clients achieve their financial goals and navigate the complexities of accounting and tax regulations with ease. We believe in fostering long-term relationships with our clients based on integrity, transparency, and exceptional service.
+          </p>
+          <p>
+            At [Your accounting firm name], we understand the unique challenges businesses face, and our comprehensive range of services is designed to address each client's specific needs effectively.
+          </p>
+        </div>
+        <div class="col-md-6">
+         <img class="mb-3" width="100%" src="https://img.freepik.com/free-photo/businessmen-hands-white-table-with-documents-drafts_176420-351.jpg?w=740&t=st=1690007487~exp=1690008087~hmac=2af02df3bd4d03a35f3917da10c000c2e7222cba07a7d2b1f9b5870ed005cff3" alt="">
+        </div>
+      </div>
+    </div>
+  </section>
+  
+</section>
+<footer class="footer container-fluid bg-dark-subtle">
+  <div class="container">
+    <div class="row mt-2">
+      <div class="col-md-6">
+        <p>&copy; 2024 Your Website. All rights reserved.</p>
+      </div>
+      <div class="col-md-6">
+        <ul class="footer-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% endblock %}

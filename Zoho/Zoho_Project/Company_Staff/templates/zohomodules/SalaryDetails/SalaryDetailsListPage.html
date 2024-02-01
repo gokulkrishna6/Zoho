@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<div class="body-wrapper">
+  <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            {% if log_id.user_type == 'Staff' %} <li class="breadcrumb-item"><a href="{% url 'staff_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>{% endif %}
+            {% if log_id.user_type == 'Company' %} <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>{% endif %}
+             <li class="breadcrumb-item"><a href=" " class="text-warning-emphasis">Payroll</a></li>
+             <li class="breadcrumb-item" aria-current="page">Salary Details</li>
+          </ol>
+      </nav>
+      <div class="row mt-5">
+          <div class="col-md-12 col-sm-12 col-lg-12 flex-column">
+              <div class="card mb-3 bg-black shadow p-3 mb-5 rounded" style="max-width: 1200px;">
+                <div class="row mt-4">
+                  <div class="col-7 col-sm-7 col-lg-7"><a class="text-white" style="font-size: 1rem;">All Employees</a></div>
+                <br><br>
+                  <div class="row">
+                    <div class="col-md-3 col-sm-3"><input type="text" id="search" class="form-control bg-light text-dark" placeholder="Search.." autocomplete="off"></div>
+                    <div class="col-md-4 col-sm-2">
+                      <div class="dropdown">
+                        <a class="btn text-center px-4 pt-2 btn-outline-warning" id="sortbutton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button" >
+                          <i  class="fas fa-sort m-1"></i>
+                        </a>
+                        <div class="dropdown-menu m-1">
+                          <a class="dropdown-item" href=" ">All</a>
+                          <a class="dropdown-item" onclick="sortTableName()">Employee Name</a>
+                          <a class="dropdown-item" onclick="sortTableSalary()">Month</a>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="col-sm-10 col-lg-5 ml-5   "  >
+                    <div class="    " >
+                      <a onclick="ExportToExcel()" class="btn text-center pt-2 btn-outline-warning " >
+                        <i class='fas fa-file-export' style='font-size:20px'></i> <span style="margin-top: 3px;">Export</span>
+                      </a>
+                      &nbsp;
+                      <a data-toggle="modal" data-target="#importmodal" class="btn text-center pt-2 btn-outline-warning" onclick="sampleexcel()">
+                        <i class="fas fa-file-import" style='font-size:20px'></i> <span style="margin-top: 3px;">Import</span>
+                      </a>
+                      &nbsp;
+                      <a class="btn text-center  pt-2 btn-outline-warning" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button" >
+                        <i class="fa fa-filter mt-1"></i>
+                      </a>
+                      &nbsp;
+                      <div class="dropdown-menu m-1">
+                        <a class="dropdown-item" onclick="applyFilter('All')">All</a>
+                        <a class="dropdown-item" onclick="applyFilter('Active')">Save</a>
+                        <a class="dropdown-item" onclick="applyFilter('Inactive')">Draft</a>
+                      </div>
+                      &nbsp;
+                      <a  class="btn btn-outline-warning text-right px-3 py-2 flex-sm-row" role="button"  href="">
+                        <i class="fa fa-plus fs-4" >&nbsp;<span>New</span></i>
+                      </a>
+                    </div>
+                  </div>
+      </div>
+        <br>
+        <div class="row mt-5">
+          <div class="table-responsive">
+            <table class="table  text-white" id="employeetable" >
+              <thead>
+                <tr>
+                  <th style="text-align: center;">SERIAL NO</th>
+                  <th style="text-align: center;">EMPLOYEE NAME</th>
+                  <th style="text-align: center;">EMPLOYEE ID</th>
+                  <th style="text-align: center;">MONTH-YEAR</th>
+                  <th style="text-align: center;">SALARY</th>
+                  <th style="text-align: center;">STATUS</th>
+              
+                </tr>
+              </thead>
+              <tbody >
+                {% for i in employees %}
+                  <tr id="over" class='clickable-row' data-href=" ">
+                    <td style="text-align: center;">{{forloop.counter}}</td>
+                    <td style="text-align: center;">{{i.first_name}} {{i.last_name}}</td>
+                    <td style="text-align: center;">{{i.emp_number}}</td>
+                    <td style="text-align: center;">{{i.joindate | date:'d-m-Y'}}</td>
+                    <td style="text-align: center;">{{i.salary}}</td>
+                    <td style="text-align: center;">{{i.status}}</td>
+                 
+               
+                    
+                 
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row" hidden>
+          <table id="employeemodeltable">
+            <thead>
+              <th>TTITLE</th>
+              <th>FIRST NAME</th>
+              <th>LAST NAME</th>
+              <th>ALIAS</th>
+              <th>JOINING DATE</th>
+              <th>SALARY DATE</th>
+              <th>SALARY DETAILS</th>
+              <th>AMOUNT PER HOUR</th>
+              <th>TOTAL WORK HOUR</th>
+              <th>SALARY AMOUNT</th>
+              <th>EMPLOYEE NUMBER</th>
+              <th>DESIGANTION</th>
+              <th>LOCATION</th>
+              <th>GENDER</th>
+              <th>DOB</th>
+              <th>BLOOD GROUP</th>
+              <th>FATHER / MOTHER NAME</th>
+              <th>SPOUSE NAME</th>
+              <th>PERMANENT ADDRESS</th>
+              <th>TEMPORARY ADDRESS</th>
+              <th>CONTACT NUMBER</th>
+              <th>EMERGENCY CONTACT NUMBER</th>
+              <th>EMAIL</th>
+              <th>BANK DETAILS</th>
+              <th>ACCOUNT NUMBER</th>
+              <th>IFSC</th>
+              <th>BANK NAME</th>
+              <th>BRANCH NAME</th>
+              <th>TRANSACTION TYPE</th>
+              <th>TDS APPLICABLE</th>
+              <th>PERCENTAGE/AMOUNT</th>
+              <th>TDS VALUE</th>
+              <th>INCOME TAX NUMBER</th>
+              <th>AADHAR NUMBER</th>
+              <th>UAN</th>
+              <th>PFN</th>
+              <th>PRAN</th>
+            </thead>
+            <tbody>
+              <td>Mr/Mrs/Miss/Ms</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>YYYY-MM-DD</td>
+              <td>1-10/10-15/15-31</td>
+              <td>Fixed/Temporary/Time Based</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Male/Female/Transgender</td>
+              <td>YYYY-MM-DD</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Yes/No</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>ATM/Cash/Check</td>
+              <td>Yes/No</td>
+              <td>Percentage/Amount</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>
+      </div>
+      </div>
+
+      <div class="modal fade" id="importmodal" style="margin-top: 7vh;">
+        <div class="modal-dialog ">
+          <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+            <div class="modal-header">
+              <h5 class="modal-title" id="excelModalLabel">Upload File
+              <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" style="font-size: x-large;">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="background: rgb(32, 35, 37);">
+              <div class="card">
+                <form action=" " method="post" class="needs-validation" enctype="multipart/form-data"  id="excelForm">
+                  {% csrf_token %}
+                  <div class="form-group mt-3" style="margin-left: 2vh;">
+                    <label for="file" style="font-size: medium;">Choose Excel File for Employees - </label> <br><br>
+                    <input type="file" class="form-control-file" id="empfile" name="empfile" accept=".xls,.xlsx"><br>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn text-center pt-2 btn-outline-warning" onclick="" >Upload</button>
+                    <button type="button" class="btn text-center pt-2 btn-outline-warning" data-dismiss="modal">Close</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>  
+
+      
+    
+    
+</div>
+  </div>
+  </div>
+
+<script>
+  function sortTableName() {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("employeetable");
+    switching = true;
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 1; i < rows.length - 1; i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("td")[2];
+        y = rows[i + 1].getElementsByTagName("td")[2];
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+      }
+    }
+  }
+
+  function sortTableSalary() {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("employeetable");
+    switching = true;
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 1; i < rows.length - 1; i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("td")[8];
+        y = rows[i + 1].getElementsByTagName("td")[8];
+        if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+      }
+    }
+  }
+</script>
+
+<script>
+  jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+      window.location = $(this).data("href");
+    });
+  });
+</script>
+
+<script>
+  var $rows = $('table tbody tr');
+  $('#search').keyup(function() {
+    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+    $rows.hide().filter(function() {
+      var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+      return ~text.indexOf(val);
+    }).show();
+  });
+</script>
+
+<script>
+  function applyFilter(currentFilter) {
+    var rows = $("#employeetable tbody tr");
+    rows.show();
+    if (currentFilter === "Active" || currentFilter === "Inactive") {
+      rows.filter(":not(:contains('" + currentFilter + "'))").hide();
+    }
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script>
+  function ExportToExcel() {
+    console.log("employeetable");
+    $('in1').prop
+    const table = document.getElementById('employeetable'); // Replace 'myTable' with your table's ID
+    const wb = XLSX.utils.table_to_book(table);
+
+    XLSX.writeFile(wb, 'payroll_list.xlsx');
+}
+</script>
+
+<script>
+  function sampleexcel(){
+    const table1 = document.querySelector('#employeemodeltable');
+    const ws1 = XLSX.utils.table_to_sheet(table1);
+    const wb1 = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb1, ws1, 'Sheet1');
+    XLSX.writeFile(wb1, 'pay roll.xlsx');
+  }
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    {% for msg in messages %}
+    swal({
+    title: "{{msg}}",
+    text: "{{msg.tags}}",
+    icon: "{{msg.tags}}",
+  });
+    {% endfor %}
+   </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+  function uploadFile() {
+    const form = document.getElementById('excelForm');
+    const formData = new FormData(form);
+    fetch('import_payroll_excel', {
+      method: 'POST',
+      body: formData
+    })
+    .then(data => {
+            swal({
+                title: "Imported !",
+                text: "Purchase Bill Import Successfull!",
+                icon: "success",
+                buttons: false,
+            })
+        })
+        .then(response => {
+            setTimeout(function () {
+                location.reload();
+            }, 1250);
+        })
+        .catch(error => {
+            swal({
+                title: "Error !",
+                text: "Purchase Bill Import Unuccessfull!",
+                icon: "warning",
+                buttons: false,
+            })
+        });
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous">
+</script>
+{% endblock %}

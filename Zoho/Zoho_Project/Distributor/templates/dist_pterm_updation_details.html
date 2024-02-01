@@ -1,0 +1,119 @@
+{% extends 'distributorbase.html' %}
+{% load static %}
+{% block content %}
+
+<div class="body-wrapper">
+  <div class="container-fluid">
+      <div class="container mt-5 mr-5 " style="background-color: black;">
+          <h4 class="text-center h4 mb-5 pt-5 text-light" >CLIENT
+                  DETAILS</h4>
+          <hr class="text-warning">
+
+          <center>
+              {% if term.company.image %}
+              <img class="img-thumbnail" width="30%" src="{{ term.company.image.url }}" alt="">
+              {% else %}
+              <img src="{% static 'registration_login/images/default.png' %}" width="20%" wi class="img-thumbnail">
+              {% endif %}
+          </center>
+          <h3 class="h3 text-center py-4 text-light"><b>{{term.company.login_details.first_name}} {{term.company.login_details.last_name}}</b></h3>
+
+          <hr class="text-warning">
+          
+          <div class="row p-5 pb-3 pt-3 ">
+              <div class="col-md-6">
+                  <h5 class="h5 text-light" style="margin-right: 10px;"> Company Code </h5>
+              </div>
+              <div class="col-md-6">
+                  <h5 class="h5 text-light ">: {{term.company.company_code}}</h5>
+              </div>
+          </div>
+
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  Email </h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light">: {{term.company.login_details.email}}</h5>
+              </div>
+          </div>
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  User Name</h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light"> : {{term.company.login_details.username}}</h5>
+              </div>
+          </div>
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  Contact </h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light"> : {{term.company.contact}}</h5>
+              </div>
+          </div>
+          
+          
+          
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  Payment Terms </h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light" > : {{term.company.payment_term.payment_terms_number}}
+                          {{term.company.payment_term.payment_terms_value}}</h5>
+              </div>
+          </div>
+          <div class="row p-5 pt-3 pb-3 ">
+              <div class="col">
+                  <h5 class="h5 text-light"  style="margin-right: 10px;">  End Date</h5>
+              </div>
+              <div class="col">
+                  <h5 class="h5 text-light">  : {{term.company.End_date}}</h5>
+              </div>
+          </div>
+          
+        
+          <div class="row px-3 py-4">
+            <div class="col-md-6" style="background-color: #20201f;">
+                <h5 class="h5 p-5 pb-3 pt-3 text-light">Existing Payment Term</h5>
+                    <hr class="text-warning">
+                   <h6 class="p-5 text-left text-light"><span class="text-warning">{{old_term.payment_term.payment_terms_number}} {{old_term.payment_term.payment_terms_value}}</span>  : {{difference_in_days}} days remaining</h6>
+                        
+                 
+            </div>
+            <div class="col-md-6" style="background-color: #20201f;">
+                <h5 class="h5 p-5 pb-3 pt-3 text-light">New Payment Term</h5>
+                    <hr class="text-warning">
+                    <h6 class="p-5  text-warning">{{new_term.payment_term.payment_terms_number}} {{new_term.payment_term.payment_terms_value}}</h6>
+                    
+                        
+                    
+            </div>
+          </div>
+         
+           
+               
+          <div class="row pb-5">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <a href="{% url 'dist_pterm_updation_ok' term.company.id %}" class="btn btn-outline-warning"  style="width: 100%;">Approve</a>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+          
+                  
+              
+          </div>
+
+
+
+      </div>
+
+
+
+  </div>
+</div>
+
+{% endblock %}

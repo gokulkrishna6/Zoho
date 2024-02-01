@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<style>
+  table tr td:hover {
+  cursor: pointer;
+}
+</style>
+<body>
+  
+  <div class="body-wrapper">
+    <div class="container-fluid">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'company_dashboard' %}" class="text-warning-emphasis">Dashboard</a></li>
+          <li class="breadcrumb-item" aria-current="page">All Staff</li>
+        </ol>
+      </nav>
+      <div style="overflow-x:auto;"> 
+        <div class="table-responsive">
+          <table class="table mt-lg-5 mt-2 rounded" style="background-color: rgb(0, 0, 0);color: white;">
+            <thead>
+              <tr class="border-bottom border-dark">
+                <th scope="col" ><b>No</b></th>
+                <th scope="col" ><b>Name</b></th>
+                <th scope="col" ><b>Email</b></th>
+                <th scope="col" ><b>Username</b></th>
+                <th scope="col" ><b>Contact</b></th>
+                <th scope="col" ><b>Action</b></th>
+  
+              </tr>
+            </thead>
+            <tbody>
+              {% for staff in staffs %}
+              <tr class="border-bottom border-dark">
+                <td>{{forloop.counter}}</th>
+                <td>
+                  {% if staff.image %}
+                  <img width="40" height="40" class="rounded-circle img-fluid" src="{{ staff.image.url }}" alt="img">
+                  {% else %}
+                  <img src="{% static 'registration_login/images/default.png' %}" alt="img" width="40" height="40" class="rounded-circle img-fluid">
+                  {% endif %}
+                  <a class="text-white m-1" href="" >{{staff.login_details.first_name}} {{staff.login_details.last_name}}</a>
+                </td>
+                <td>{{staff.login_details.email}}</td>
+                <td>{{staff.login_details.username}}</td>
+                <td>{{staff.contact}}</td>
+                
+                <td>
+                  <a href="{% url 'staff_approval_cancel' staff.id %}" class="btn btn-outline-warning btn-sm">Cancel Approval</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table> 
+  
+        </div> 
+      </div>
+
+    </div>
+  </div>
+</body>
+
+{% endblock %}
